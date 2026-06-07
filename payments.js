@@ -1,17 +1,16 @@
 /*
   Mi archivo de pagos del frontend.
-  Maneja Mercado Pago y Wompi.
+  Integra: Mercado Pago + Wompi + Bold
   Ninguna clave secreta vive aquí — todo lo sensible está en el backend.
 */
 
 // ══════════════════════════════════════════════════════════════
-// MI URL DEL BACKEND — la única línea que cambio según el entorno
+// MI URL DEL BACKEND
 // ══════════════════════════════════════════════════════════════
 const MI_BACKEND_URL = (() => {
   const esLocal = ['localhost', '127.0.0.1', ''].includes(window.location.hostname);
   if (esLocal) return 'http://localhost:3000';
-  // ⚠️ Reemplaza con tu URL real de Render
-  return 'https://pack-cartas-amor.onrender.com';
+  return 'https://pack-cartas-amor.onrender.com'; // ← Mi URL de Render
 })();
 
 
@@ -25,12 +24,8 @@ async function iniciarPago(pasarela) {
     switch (pasarela) {
       case 'mercadopago': await pagarConMercadoPago(); break;
       case 'wompi':       await pagarConWompi();       break;
-      case 'bold':
-        mostrarToast('🔜 Bold estará disponible muy pronto.', 'info');
-        bloquearBotones(false);
-        break;
-      default:
-        throw new Error('Pasarela desconocida: ' + pasarela);
+      case 'bold':        await pagarConBold();        break;
+      default: throw new Error('Pasarela desconocida: ' + pasarela);
     }
   } catch (error) {
     console.error('Mi error al iniciar pago:', error);
@@ -43,7 +38,6 @@ window.iniciarPago = iniciarPago;
 
 // ══════════════════════════════════════════════════════════════
 // MERCADO PAGO — Checkout Pro
-// Llamo al backend → obtengo init_point → redirijo al usuario
 // ══════════════════════════════════════════════════════════════
 async function pagarConMercadoPago() {
   mostrarToast('⏳ Conectando con Mercado Pago...', 'info');
@@ -56,31 +50,22 @@ async function pagarConMercadoPago() {
 
   if (!respuesta.ok) {
     const err = await respuesta.json().catch(() => ({}));
-    throw new Error(err.mensaje || `Error del servidor: ${respuesta.status}`);
+    throw new Error(err.mensaje || `Error ${respuesta.status}`);
   }
 
   const datos = await respuesta.json();
-  if (!datos.ok) throw new Error(datos.mensaje || 'El backend no pudo crear la preferencia.');
+  if (!datos.ok) throw new Error(datos.mensaje);
 
-  // Redirijo al Checkout Pro — MP se encarga del resto
   window.location.href = datos.init_point;
 }
 
 
 // ══════════════════════════════════════════════════════════════
-// WOMPI — Widget de pago embebido
-//
-// Flujo:
-//   1. Pido la firma al backend (tiene mi llave de integridad secreta)
-//   2. Cargo el script del Widget de Wompi dinámicamente
-//   3. Creo un <form> con los datos firmados y lo envío
-//   4. Wompi abre su pantalla de pago
-//   5. Wompi redirige al usuario a mi success.html cuando termina
+// WOMPI — Checkout con firma de integridad
 // ══════════════════════════════════════════════════════════════
 async function pagarConWompi() {
   mostrarToast('⏳ Conectando con Wompi...', 'info');
 
-  // ── Paso 1: Pido la firma al backend ──
   const respuesta = await fetch(`${MI_BACKEND_URL}/api/wompi-firma`, {
     method:  'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -89,20 +74,17 @@ async function pagarConWompi() {
 
   if (!respuesta.ok) {
     const err = await respuesta.json().catch(() => ({}));
-    throw new Error(err.mensaje || `Error del servidor: ${respuesta.status}`);
+    throw new Error(err.mensaje || `Error ${respuesta.status}`);
   }
 
   const datos = await respuesta.json();
-  if (!datos.ok) throw new Error(datos.mensaje || 'No se pudo iniciar el pago con Wompi.');
+  if (!datos.ok) throw new Error(datos.mensaje);
 
-  // ── Paso 2: Construyo y envío el formulario de Wompi ──
-  // Wompi usa un formulario GET que redirige a su checkout con los parámetros en la URL
-  // Es la integración oficial: https://docs.wompi.co/docs/colombia/widget-checkout-web
-  const formulario = document.createElement('form');
+  // Construyo y envío el formulario de Wompi
+  const formulario  = document.createElement('form');
   formulario.method = 'GET';
   formulario.action = 'https://checkout.wompi.co/p/';
 
-  // Mis campos requeridos por Wompi — los valores vienen del backend
   const campos = {
     'public-key':          datos.llave_publica,
     'currency':            datos.moneda,
@@ -112,33 +94,134 @@ async function pagarConWompi() {
     'redirect-url':        datos.redirect_url,
   };
 
-  // Agrego cada campo como input oculto al formulario
   Object.entries(campos).forEach(([nombre, valor]) => {
-    const input   = document.createElement('input');
-    input.type    = 'hidden';
-    input.name    = nombre;
-    input.value   = valor;
+    const input = document.createElement('input');
+    input.type  = 'hidden';
+    input.name  = nombre;
+    input.value = valor;
     formulario.appendChild(input);
   });
 
-  // Agrego el formulario al DOM, lo envío y lo limpio
-  // (el navegador redirige a Wompi automáticamente)
-  document.body.appendChild(formulario);
   console.log('🔗 Enviando a Wompi | Ref:', datos.referencia);
+  document.body.appendChild(formulario);
   formulario.submit();
-
-  // No elimino el formulario porque el navegador ya está redirigiendo
 }
 
 
 // ══════════════════════════════════════════════════════════════
-// FEEDBACK VISUAL
+// BOLD — Botón de pago con firma de integridad
+//
+// Flujo:
+//   1. Pido la firma al backend (tiene mi llave secreta)
+//   2. Cargo el script oficial de Bold dinámicamente
+//   3. Creo el botón de Bold con los datos firmados
+//   4. Simulo clic en el botón — Bold abre su modal de pago
+//   5. Tras el pago, Bold redirige a mi success.html
+//
+// Documentación: https://docs.bold.co/docs/cobro-en-linea-boton-de-pago
 // ══════════════════════════════════════════════════════════════
+async function pagarConBold() {
+  mostrarToast('⏳ Conectando con Bold...', 'info');
 
-// Bloqueo / desbloqueo los botones del modal durante el proceso
+  // Paso 1 — Pido la firma al backend
+  const respuesta = await fetch(`${MI_BACKEND_URL}/api/bold-firma`, {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body:    JSON.stringify({}),
+  });
+
+  if (!respuesta.ok) {
+    const err = await respuesta.json().catch(() => ({}));
+    throw new Error(err.mensaje || `Error ${respuesta.status}`);
+  }
+
+  const datos = await respuesta.json();
+  if (!datos.ok) throw new Error(datos.mensaje);
+
+  // Paso 2 — Cargo el script oficial de Bold si no está ya en la página
+  await cargarScript('https://checkout.bold.co/library/boldPaymentButton.js');
+
+  // Paso 3 — Elimino cualquier botón Bold anterior para evitar duplicados
+  const btnAnterior = document.getElementById('bold-button-container');
+  if (btnAnterior) btnAnterior.remove();
+
+  // Paso 4 — Creo el contenedor del botón Bold con todos los atributos requeridos
+  // Bold lee estos atributos del DOM para inicializar el botón de pago
+  const contenedor = document.createElement('div');
+  contenedor.id    = 'bold-button-container';
+
+  // Oculto el contenedor — Bold lo necesita en el DOM pero yo controlo el flujo
+  contenedor.style.cssText = 'position:absolute;left:-9999px;top:-9999px;';
+
+  // Mi script de Bold inyecta el botón dentro de este div con estos atributos
+  const boton = document.createElement('script');
+  boton.setAttribute('data-bold-button',       '');
+  boton.setAttribute('data-order-id',          datos.orderId);
+  boton.setAttribute('data-currency',          datos.moneda);
+  boton.setAttribute('data-amount',            String(datos.monto));
+  boton.setAttribute('data-api-key',           datos.identity_key);
+  boton.setAttribute('data-integrity-hash',    datos.firma);
+  boton.setAttribute('data-redirect-url',      datos.redirect_url);
+  boton.setAttribute('data-button-label',      'Pagar con Bold');
+
+  contenedor.appendChild(boton);
+  document.body.appendChild(contenedor);
+
+  console.log('🔗 Bold botón creado | Order:', datos.orderId);
+
+  // Paso 5 — Espero a que Bold renderice el botón y lo activo
+  // Bold necesita un momento para procesar los atributos e inyectar el botón
+  await esperar(800);
+
+  // Busco el botón que Bold inyectó y simulo el clic para abrir su modal
+  const botonBold = contenedor.querySelector('button') ||
+                    contenedor.querySelector('[data-bold]') ||
+                    contenedor.querySelector('a');
+
+  if (botonBold) {
+    botonBold.click();
+  } else {
+    // Si Bold no inyectó el botón (error de inicialización),
+    // redirijo directamente a su checkout como respaldo
+    console.warn('⚠️ Bold no inyectó el botón, redirigiendo al checkout directo');
+    const params = new URLSearchParams({
+      apiKey:        datos.identity_key,
+      orderId:       datos.orderId,
+      amount:        datos.monto,
+      currency:      datos.moneda,
+      integrityHash: datos.firma,
+      redirectUrl:   datos.redirect_url,
+    });
+    window.location.href = `https://checkout.bold.co/payment/bold-button?${params}`;
+  }
+}
+
+// Mi función de espera — la uso para darle tiempo al script de Bold de cargar
+function esperar(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+// Cargo un script externo dinámicamente solo si no existe ya en la página
+function cargarScript(src) {
+  return new Promise((resolve, reject) => {
+    if (document.querySelector(`script[src="${src}"]`)) {
+      return resolve(); // Ya está cargado
+    }
+    const script  = document.createElement('script');
+    script.src    = src;
+    script.onload = resolve;
+    script.onerror = () => reject(new Error(`No pude cargar: ${src}`));
+    document.head.appendChild(script);
+  });
+}
+
+
+// ══════════════════════════════════════════════════════════════
+// FEEDBACK VISUAL — Spinner y estados de los botones
+// ══════════════════════════════════════════════════════════════
 function bloquearBotones(bloquear, pasarela) {
-  const botones = document.querySelectorAll('.pasarela-btn');
-  const mapaIds = { mercadopago: 'btn-mp', wompi: 'btn-wompi', bold: 'btn-bold' };
+  const botones    = document.querySelectorAll('.pasarela-btn');
+  const mapaIds    = { mercadopago: 'btn-mp', wompi: 'btn-wompi', bold: 'btn-bold' };
   const mapaLabels = { mercadopago: 'Mercado Pago', wompi: 'Wompi', bold: 'Bold' };
 
   botones.forEach(btn => {
@@ -151,7 +234,7 @@ function bloquearBotones(bloquear, pasarela) {
     const btnActivo = document.getElementById(mapaIds[pasarela]);
     if (btnActivo) {
       btnActivo._htmlOriginal = btnActivo.innerHTML;
-      btnActivo.style.opacity = '1'; // El activo se ve completo, los demás atenuados
+      btnActivo.style.opacity = '1';
       btnActivo.innerHTML = `
         <div class="pasarela-logo" style="background:var(--c-gold);color:var(--t-on-gold);">
           <div class="spinner"></div>
@@ -173,7 +256,6 @@ function bloquearBotones(bloquear, pasarela) {
   }
 }
 
-// Mi sistema de toasts — lo usa también main.js
 function mostrarToast(mensaje, tipo) {
   const toast = document.getElementById('toast');
   if (!toast) return;
