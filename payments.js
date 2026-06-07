@@ -1,166 +1,168 @@
 /*
   Mi archivo de pagos del frontend.
-  Su único trabajo: cuando el usuario elige una pasarela,
-  llamar al backend y redirigirlo al checkout.
-
-  IMPORTANTE: Aquí NO hay ninguna clave secreta.
-  Todo lo que sea sensible vive en el backend (server.js).
+  Maneja Mercado Pago y Wompi.
+  Ninguna clave secreta vive aquí — todo lo sensible está en el backend.
 */
 
 // ══════════════════════════════════════════════════════════════
-// MI URL DEL BACKEND
-// Cambio este valor según el entorno donde esté corriendo
+// MI URL DEL BACKEND — la única línea que cambio según el entorno
 // ══════════════════════════════════════════════════════════════
 const MI_BACKEND_URL = (() => {
-  // Si estoy en producción (Netlify), uso la URL de Render
-  // Si estoy en desarrollo local, uso localhost
-  const esLocal = window.location.hostname === 'localhost'
-               || window.location.hostname === '127.0.0.1'
-               || window.location.hostname === '';
-
-  if (esLocal) {
-    return 'http://localhost:3000'; // Mi servidor local de desarrollo
-  }
-
+  const esLocal = ['localhost', '127.0.0.1', ''].includes(window.location.hostname);
+  if (esLocal) return 'http://localhost:3000';
+  // ⚠️ Reemplaza con tu URL real de Render
   return 'https://pack-cartas-amor.onrender.com';
 })();
 
 
 // ══════════════════════════════════════════════════════════════
-// MI FUNCIÓN CENTRAL — la llaman los botones del modal
+// FUNCIÓN CENTRAL — la llaman los botones del modal
 // ══════════════════════════════════════════════════════════════
-
-/**
- * Despacho el flujo de pago según la pasarela que eligió el usuario.
- * @param {string} pasarela - 'mercadopago' | 'wompi' | 'bold'
- */
 async function iniciarPago(pasarela) {
-  // Bloqueo los botones del modal para evitar doble clic
-  bloquearBotonesModal(true, pasarela);
+  bloquearBotones(true, pasarela);
 
   try {
     switch (pasarela) {
-      case 'mercadopago':
-        await pagarConMercadoPago();
-        break;
-
-      // Wompi y Bold los agrego en la siguiente fase
-      case 'wompi':
+      case 'mercadopago': await pagarConMercadoPago(); break;
+      case 'wompi':       await pagarConWompi();       break;
       case 'bold':
-        mostrarNotificacion('🔜 Esta pasarela estará disponible muy pronto.', 'info');
-        bloquearBotonesModal(false);
+        mostrarToast('🔜 Bold estará disponible muy pronto.', 'info');
+        bloquearBotones(false);
         break;
-
       default:
-        throw new Error('Pasarela no reconocida: ' + pasarela);
+        throw new Error('Pasarela desconocida: ' + pasarela);
     }
   } catch (error) {
     console.error('Mi error al iniciar pago:', error);
-    mostrarNotificacion('⚠️ Algo salió mal. Intenta de nuevo.', 'error');
-    bloquearBotonesModal(false);
+    mostrarToast('⚠️ Algo salió mal. Intenta de nuevo.', 'error');
+    bloquearBotones(false);
   }
 }
-
-// Expongo la función para que los onclick del HTML la encuentren
 window.iniciarPago = iniciarPago;
 
 
 // ══════════════════════════════════════════════════════════════
-// MI INTEGRACIÓN CON MERCADO PAGO
+// MERCADO PAGO — Checkout Pro
+// Llamo al backend → obtengo init_point → redirijo al usuario
 // ══════════════════════════════════════════════════════════════
-
-/**
- * Llamo a mi backend para crear la preferencia de pago,
- * luego redirijo al usuario al Checkout Pro de Mercado Pago.
- *
- * Flujo:
- *   Frontend → POST /api/crear-preferencia → Backend
- *   Backend → Mercado Pago API → crea preferencia
- *   Backend → devuelve { init_point, sandbox_init_point }
- *   Frontend → redirige al usuario al init_point
- */
 async function pagarConMercadoPago() {
-  // Le aviso al usuario que estamos conectando
-  mostrarNotificacion('⏳ Conectando con Mercado Pago...', 'info');
+  mostrarToast('⏳ Conectando con Mercado Pago...', 'info');
 
-  // Llamo a mi backend — él tiene el Access Token secreto
   const respuesta = await fetch(`${MI_BACKEND_URL}/api/crear-preferencia`, {
     method:  'POST',
     headers: { 'Content-Type': 'application/json' },
-    body:    JSON.stringify({
-      // Puedo enviar datos adicionales si los necesito en el backend
-      // origen: 'landing-page'
-    }),
+    body:    JSON.stringify({}),
   });
 
-  // Si el servidor respondió con error HTTP (500, 503, etc.)
   if (!respuesta.ok) {
-    const errorData = await respuesta.json().catch(() => ({}));
-    throw new Error(errorData.mensaje || `Error del servidor: ${respuesta.status}`);
+    const err = await respuesta.json().catch(() => ({}));
+    throw new Error(err.mensaje || `Error del servidor: ${respuesta.status}`);
   }
 
   const datos = await respuesta.json();
+  if (!datos.ok) throw new Error(datos.mensaje || 'El backend no pudo crear la preferencia.');
 
-  if (!datos.ok) {
-    throw new Error(datos.mensaje || 'El backend no pudo crear la preferencia.');
-  }
-
-  // Determino si usar el link de pruebas o el de producción
-  // Si el Access Token empieza con "TEST-" estamos en pruebas → uso sandbox_init_point
-  // En producción → uso init_point
-  // El backend me dice cuál usar a través de la URL que retorna
-  const urlPago = datos.init_point; // El backend decide cuál retornar según el ambiente
-
-  console.log('🔗 Redirigiendo a:', urlPago);
-
-  // Redirijo al usuario al Checkout de Mercado Pago
-  // En el checkout el usuario pone su tarjeta y paga
-  // Después MP lo redirige a mi success.html o index.html?pago=error
-  window.location.href = urlPago;
+  // Redirijo al Checkout Pro — MP se encarga del resto
+  window.location.href = datos.init_point;
 }
 
 
 // ══════════════════════════════════════════════════════════════
-// MIS FUNCIONES DE FEEDBACK VISUAL
+// WOMPI — Widget de pago embebido
+//
+// Flujo:
+//   1. Pido la firma al backend (tiene mi llave de integridad secreta)
+//   2. Cargo el script del Widget de Wompi dinámicamente
+//   3. Creo un <form> con los datos firmados y lo envío
+//   4. Wompi abre su pantalla de pago
+//   5. Wompi redirige al usuario a mi success.html cuando termina
+// ══════════════════════════════════════════════════════════════
+async function pagarConWompi() {
+  mostrarToast('⏳ Conectando con Wompi...', 'info');
+
+  // ── Paso 1: Pido la firma al backend ──
+  const respuesta = await fetch(`${MI_BACKEND_URL}/api/wompi-firma`, {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body:    JSON.stringify({}),
+  });
+
+  if (!respuesta.ok) {
+    const err = await respuesta.json().catch(() => ({}));
+    throw new Error(err.mensaje || `Error del servidor: ${respuesta.status}`);
+  }
+
+  const datos = await respuesta.json();
+  if (!datos.ok) throw new Error(datos.mensaje || 'No se pudo iniciar el pago con Wompi.');
+
+  // ── Paso 2: Construyo y envío el formulario de Wompi ──
+  // Wompi usa un formulario GET que redirige a su checkout con los parámetros en la URL
+  // Es la integración oficial: https://docs.wompi.co/docs/colombia/widget-checkout-web
+  const formulario = document.createElement('form');
+  formulario.method = 'GET';
+  formulario.action = 'https://checkout.wompi.co/p/';
+
+  // Mis campos requeridos por Wompi — los valores vienen del backend
+  const campos = {
+    'public-key':          datos.llave_publica,
+    'currency':            datos.moneda,
+    'amount-in-cents':     String(datos.monto_centavos),
+    'reference':           datos.referencia,
+    'signature:integrity': datos.firma,
+    'redirect-url':        datos.redirect_url,
+  };
+
+  // Agrego cada campo como input oculto al formulario
+  Object.entries(campos).forEach(([nombre, valor]) => {
+    const input   = document.createElement('input');
+    input.type    = 'hidden';
+    input.name    = nombre;
+    input.value   = valor;
+    formulario.appendChild(input);
+  });
+
+  // Agrego el formulario al DOM, lo envío y lo limpio
+  // (el navegador redirige a Wompi automáticamente)
+  document.body.appendChild(formulario);
+  console.log('🔗 Enviando a Wompi | Ref:', datos.referencia);
+  formulario.submit();
+
+  // No elimino el formulario porque el navegador ya está redirigiendo
+}
+
+
+// ══════════════════════════════════════════════════════════════
+// FEEDBACK VISUAL
 // ══════════════════════════════════════════════════════════════
 
-/**
- * Bloqueo / desbloqueo los botones del modal durante el proceso de pago.
- * @param {boolean} bloquear  - true para bloquear, false para restaurar
- * @param {string}  pasarela  - cuál botón mostrar en estado "cargando"
- */
-function bloquearBotonesModal(bloquear, pasarela) {
+// Bloqueo / desbloqueo los botones del modal durante el proceso
+function bloquearBotones(bloquear, pasarela) {
   const botones = document.querySelectorAll('.pasarela-btn');
+  const mapaIds = { mercadopago: 'btn-mp', wompi: 'btn-wompi', bold: 'btn-bold' };
+  const mapaLabels = { mercadopago: 'Mercado Pago', wompi: 'Wompi', bold: 'Bold' };
 
   botones.forEach(btn => {
-    btn.disabled = bloquear;
-    btn.style.opacity = bloquear ? '0.5' : '';
+    btn.disabled      = bloquear;
+    btn.style.opacity = bloquear ? '0.45' : '';
     btn.style.cursor  = bloquear ? 'not-allowed' : '';
   });
 
-  // Si estoy bloqueando, muestro el spinner en el botón de la pasarela elegida
   if (bloquear && pasarela) {
-    const mapIds = {
-      mercadopago: 'btn-mp',
-      wompi:       'btn-wompi',
-      bold:        'btn-bold',
-    };
-    const btnActivo = document.getElementById(mapIds[pasarela]);
+    const btnActivo = document.getElementById(mapaIds[pasarela]);
     if (btnActivo) {
-      // Guardo el HTML original para poder restaurarlo
       btnActivo._htmlOriginal = btnActivo.innerHTML;
-      const nombresPasarelas  = { mercadopago: 'Mercado Pago', wompi: 'Wompi', bold: 'Bold' };
+      btnActivo.style.opacity = '1'; // El activo se ve completo, los demás atenuados
       btnActivo.innerHTML = `
-        <div class="pasarela-logo" style="background:#555;color:#fff;font-size:0.6rem;">...</div>
-        <div class="pasarela-info">
-          <strong>Conectando con ${nombresPasarelas[pasarela]}...</strong>
-          <span>Por favor espera</span>
+        <div class="pasarela-logo" style="background:var(--c-gold);color:var(--t-on-gold);">
+          <div class="spinner"></div>
         </div>
-      `;
+        <div class="pasarela-info">
+          <strong>Conectando con ${mapaLabels[pasarela]}...</strong>
+          <span>Por favor espera un momento</span>
+        </div>`;
     }
   }
 
-  // Si estoy desbloqueando, restauro los botones a su estado original
   if (!bloquear) {
     botones.forEach(btn => {
       if (btn._htmlOriginal) {
@@ -171,12 +173,8 @@ function bloquearBotonesModal(bloquear, pasarela) {
   }
 }
 
-/**
- * Muestro una notificación tipo toast en la parte inferior de la pantalla.
- * @param {string} mensaje - El texto que quiero mostrar
- * @param {string} tipo    - 'info' | 'success' | 'error'
- */
-function mostrarNotificacion(mensaje, tipo) {
+// Mi sistema de toasts — lo usa también main.js
+function mostrarToast(mensaje, tipo) {
   const toast = document.getElementById('toast');
   if (!toast) return;
   toast.textContent = mensaje;
@@ -184,6 +182,4 @@ function mostrarNotificacion(mensaje, tipo) {
   clearTimeout(toast._timer);
   toast._timer = setTimeout(() => { toast.className = 'toast'; }, 4500);
 }
-
-// Expongo para que main.js también pueda usarla
-window.mostrarNotificacion = mostrarNotificacion;
+window.mostrarNotificacion = mostrarToast;
