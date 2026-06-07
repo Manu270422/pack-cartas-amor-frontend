@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="index, follow" />
+  <title>Pack de Cartas de Amor Premium | El Mundo de Manu</title>
+  <meta name="description" content="6 cartas de amor escritas profesionalmente. Personalízalas en segundos y envíalas por WhatsApp, correo o impresas. Descarga inmediata." />
+  <meta property="og:title"       content="Pack de Cartas de Amor Premium" />
+  <meta property="og:description" content="Las palabras perfectas para cada momento. 6 cartas premium." />
+  <meta property="og:type"        content="product" />
+
+  <!-- Mis fuentes: Cormorant Garamond para display, DM Sans para UI -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ╔══════════════════════════════════════════════════════╗
+       ║  NAVBAR FIJA                                        ║
+       ╚══════════════════════════════════════════════════════╝ -->
+  <nav class="navbar" id="navbar" role="navigation" aria-label="Navegación principal">
+    <div class="navbar-brand">El Mundo de <span>Manu</span></div>
+    <button class="btn-primary" onclick="abrirModal()" style="padding:0.6rem 1.5rem;font-size:0.85rem;">
+      Comprar — $15.000
+    </button>
+  </nav>
+
+
+  <!-- ╔══════════════════════════════════════════════════════╗
+       ║  HERO — Primera impresión                          ║
+       ╚══════════════════════════════════════════════════════╝ -->
+  <section class="hero" id="inicio" aria-labelledby="hero-title">
+    <div class="hero-bg" aria-hidden="true"></div>
+
+    <div class="hero-content">
+      <div class="eyebrow anim-hero anim-delay-1">Producto digital premium</div>
+
+      <div class="hero-line anim-hero anim-delay-1" style="animation-delay:0.2s"></div>
+
+      <h1 class="hero-title anim-hero anim-delay-2" id="hero-title">
+        Las palabras<br />que <em>necesitas</em><br />decir hoy.
+      </h1>
+
+      <p class="hero-subtitle anim-hero anim-delay-3">
+        6 cartas de amor escritas profesionalmente para los momentos que más importan.
+        Personalízalas en segundos, envíalas donde quieras.
+      </p>
+
+      <div class="anim-hero anim-delay-4" style="display:flex;flex-direction:column;align-items:center;gap:0.75rem;">
+        <button class="btn-primary" onclick="abrirModal()" style="font-size:1.05rem;padding:1rem 2.5rem;" aria-label="Comprar pack de cartas">
+          Obtener mi Pack — $15.000
+        </button>
+        <p style="font-size:0.78rem;color:var(--t-muted);display:flex;align-items:center;gap:0.4rem;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          Pago seguro · Entrega inmediata · Garantía de satisfacción
+        </p>
+      </div>
+
+      <div class="hero-stats anim-hero anim-delay-5">
+        <div class="hero-stat">
+          <span class="hero-stat-num">6</span>
+          <span class="hero-stat-label">Cartas premium</span>
+        </div>
+        <div class="hero-stat-sep" aria-hidden="true"></div>
+        <div class="hero-stat">
+          <span class="hero-stat-num">⚡</span>
+          <span class="hero-stat-label">Entrega inmediata</span>
+        </div>
+        <div class="hero-stat-sep" aria-hidden="true"></div>
+        <div class="hero-stat">
+          <span class="hero-stat-num">∞</span>
+          <span class="hero-stat-label">Uso ilimitado</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="scroll-cue" aria-hidden="true">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--t-muted)" stroke-width="2">
+        <path d="M19 9l-7 7-7-7"/>
+      </svg>
+    </div>
+  </section>
+
+
+  <!-- ╔══════════════════════════════════════════════════════╗
+       ║  PROBLEMA                                          ║
+       ╚══════════════════════════════════════════════════════╝ -->
+  <section class="section section-alt" id="problema" aria-labelledby="problema-title">
+    <div class="container-md">
+      <div class="section-header reveal">
+        <div class="eyebrow">¿Te ha pasado?</div>
+        <h2 class="section-title" id="problema-title">
+          Sientes todo,<br />pero no sabes cómo decirlo.
+        </h2>
+        <p class="section-sub">
+          El teléfono en la mano. Las palabras que no llegan.
+          El momento que se va. Eso tiene solución.
+        </p>
+      </div>
+
+      <div class="problema-grid">
+        <div class="problema-card reveal" style="transition-delay:0.1s">
+          <span class="problema-card-icon">💔</span>
+          <h3>Hay una pelea pendiente</h3>
+          <p>Cada vez que intentas disculparte, sientes que suenas a excusa vacía.</p>
+        </div>
+        <div class="problema-card reveal" style="transition-delay:0.2s">
+          <span class="problema-card-icon">🤐</span>
+          <h3>Eres de pocas palabras</h3>
+          <p>Pero quieres que tu pareja sepa que sientes mucho más de lo que expresas.</p>
+        </div>
+        <div class="problema-card reveal" style="transition-delay:0.3s">
+          <span class="problema-card-icon">📅</span>
+          <h3>Viene una fecha especial</h3>
+          <p>Y no quieres que sea otro "feliz aniversario" genérico cuando hay tanto más qué decir.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ╔══════════════════════════════════════════════════════╗
+       ║  PRODUCTO — Las 6 cartas                          ║
+       ╚══════════════════════════════════════════════════════╝ -->
+  <section class="section" id="cartas" aria-labelledby="cartas-title">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="eyebrow">El producto</div>
+        <h2 class="section-title" id="cartas-title">
+          Pack de Cartas de Amor <span style="color:var(--c-gold)">Premium</span>
+        </h2>
+        <p class="section-sub">
+          Una carta para cada momento. Solo añades el nombre y las haces completamente tuyas.
+        </p>
+      </div>
+
+      <div class="cartas-grid">
+        <article class="carta-card reveal" style="transition-delay:0.05s">
+          <div class="carta-icon">💌</div>
+          <h3>Romántica</h3>
+          <p>Para recordarle en un día cualquiera exactamente por qué lo/la amas.</p>
+          <div class="carta-preview">
+            <p>"Hay personas que pasan por tu vida dejando apenas una huella en la arena — y luego estás tú..."</p>
+          </div>
+        </article>
+        <article class="carta-card reveal" style="transition-delay:0.1s">
+          <div class="carta-icon">🔥</div>
+          <h3>Intensa</h3>
+          <p>Pasional y profunda. Para las relaciones donde las palabras comunes no alcanzan.</p>
+          <div class="carta-preview">
+            <p>"Lo que siento por ti no es lo que me enseñaron que era el amor. No es tranquilo ni predecible..."</p>
+          </div>
+        </article>
+        <article class="carta-card reveal" style="transition-delay:0.15s">
+          <div class="carta-icon">🌧️</div>
+          <h3>Nostálgica</h3>
+          <p>Para el amor a distancia. Para extrañar sin perder la conexión que los une.</p>
+          <div class="carta-preview">
+            <p>"La distancia tiene una crueldad muy particular: no borra nada..."</p>
+          </div>
+        </article>
+        <article class="carta-card reveal" style="transition-delay:0.2s">
+          <div class="carta-icon">🕊️</div>
+          <h3>Reconciliación</h3>
+          <p>Para pedir perdón de verdad, sin excusas ni drama. La disculpa que sana.</p>
+          <div class="carta-preview">
+            <p>"Me equivoqué. No de la manera vaga en que la gente pide perdón para cerrar el tema..."</p>
+          </div>
+        </article>
+        <article class="carta-card reveal" style="transition-delay:0.25s">
+          <div class="carta-icon">🥂</div>
+          <h3>Aniversario</h3>
+          <p>Para celebrar el tiempo juntos y todo lo que han construido. Emocionante y real.</p>
+          <div class="carta-preview">
+            <p>"Si pudiera mostrarte lo que veo cuando pienso en nosotros, no sería una sola imagen..."</p>
+          </div>
+        </article>
+        <article class="carta-card reveal" style="transition-delay:0.3s">
+          <div class="carta-icon">🎂</div>
+          <h3>Cumpleaños</h3>
+          <p>Para celebrar su vida, no solo la fecha. La carta que ningún mensaje puede reemplazar.</p>
+          <div class="carta-preview">
+            <p>"Hoy es tu día, y quiero empezarlo diciéndote algo que no digo con suficiente claridad..."</p>
+          </div>
+        </article>
+      </div>
+
+      <!-- Mi CTA intermedio para capturar intención en cualquier punto -->
+      <div class="reveal" style="text-align:center;margin-top:3rem;">
+        <button class="btn-primary" onclick="abrirModal()" style="font-size:1rem;">
+          Quiero estas cartas
+        </button>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ╔══════════════════════════════════════════════════════╗
+       ║  CÓMO FUNCIONA — 3 pasos simples                  ║
+       ╚══════════════════════════════════════════════════════╝ -->
+  <section class="section section-alt" aria-labelledby="como-title">
+    <div class="container-md">
+      <div class="section-header reveal">
+        <div class="eyebrow">Así de simple</div>
+        <h2 class="section-title" id="como-title">En 3 pasos tienes tu carta lista</h2>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2rem;position:relative;">
+        <div class="reveal" style="text-align:center;transition-delay:0.1s">
+          <div style="width:56px;height:56px;border-radius:50%;background:var(--c-gold-dim);border:1px solid var(--c-border-gold);display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;font-family:var(--f-display);font-size:1.4rem;color:var(--c-gold);font-weight:700;">1</div>
+          <h3 style="font-family:var(--f-display);font-size:1.15rem;margin-bottom:0.5rem;">Compra el pack</h3>
+          <p style="font-size:0.875rem;color:var(--t-secondary);line-height:1.65;">Paga de forma segura con Mercado Pago, Wompi o Bold. En segundos.</p>
+        </div>
+        <div class="reveal" style="text-align:center;transition-delay:0.2s">
+          <div style="width:56px;height:56px;border-radius:50%;background:var(--c-gold-dim);border:1px solid var(--c-border-gold);display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;font-family:var(--f-display);font-size:1.4rem;color:var(--c-gold);font-weight:700;">2</div>
+          <h3 style="font-family:var(--f-display);font-size:1.15rem;margin-bottom:0.5rem;">Personaliza en línea</h3>
+          <p style="font-size:0.875rem;color:var(--t-secondary);line-height:1.65;">Accedes a tu personalizador, eliges la carta y escribes el nombre. La carta se actualiza en tiempo real.</p>
+        </div>
+        <div class="reveal" style="text-align:center;transition-delay:0.3s">
+          <div style="width:56px;height:56px;border-radius:50%;background:var(--c-gold-dim);border:1px solid var(--c-border-gold);display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;font-family:var(--f-display);font-size:1.4rem;color:var(--c-gold);font-weight:700;">3</div>
+          <h3 style="font-family:var(--f-display);font-size:1.15rem;margin-bottom:0.5rem;">Envía o descarga</h3>
+          <p style="font-size:0.875rem;color:var(--t-secondary);line-height:1.65;">Copia el texto para WhatsApp, descarga el PDF con diseño premium o imprímela.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ╔══════════════════════════════════════════════════════╗
+       ║  BENEFICIOS                                        ║
+       ╚══════════════════════════════════════════════════════╝ -->
+  <section class="section" aria-labelledby="beneficios-title">
+    <div class="container-md">
+      <div class="section-header reveal">
+        <div class="eyebrow">Por qué funciona</div>
+        <h2 class="section-title" id="beneficios-title">No es un template cualquiera</h2>
+      </div>
+      <div class="beneficios-grid">
+        <div class="beneficio-item reveal" style="transition-delay:0.05s"><span class="beneficio-icon">✍️</span><div><h4>Escritas por un experto</h4><p>Cada carta tiene estructura, ritmo y profundidad emocional para generar un impacto real y duradero.</p></div></div>
+        <div class="beneficio-item reveal" style="transition-delay:0.1s"><span class="beneficio-icon">⚡</span><div><h4>Listas en 2 minutos</h4><p>Sin bloqueos creativos. Sin horas frente a la pantalla. Solo personalizas y listo.</p></div></div>
+        <div class="beneficio-item reveal" style="transition-delay:0.15s"><span class="beneficio-icon">📲</span><div><h4>Para cualquier canal</h4><p>WhatsApp, correo, nota impresa o PDF enviado. El formato funciona en todos los medios.</p></div></div>
+        <div class="beneficio-item reveal" style="transition-delay:0.2s"><span class="beneficio-icon">🔄</span><div><h4>Uso ilimitado de por vida</h4><p>Paga una vez. Úsalas cuando quieras, para quien quieras. Son tuyas para siempre.</p></div></div>
+        <div class="beneficio-item reveal" style="transition-delay:0.25s"><span class="beneficio-icon">🎨</span><div><h4>Diseño editorial premium</h4><p>No recibes texto plano. El personalizador tiene un diseño elegante listo para compartir o imprimir.</p></div></div>
+        <div class="beneficio-item reveal" style="transition-delay:0.3s"><span class="beneficio-icon">💯</span><div><h4>Garantía de satisfacción</h4><p>Si no te gustan, te devuelvo el dinero. Sin preguntas. Así de seguros estamos de la calidad.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ╔══════════════════════════════════════════════════════╗
+       ║  PRECIO + CTA FINAL                               ║
+       ╚══════════════════════════════════════════════════════╝ -->
+  <section class="section section-alt" id="precio" aria-labelledby="precio-title">
+    <div class="container-sm">
+      <div class="section-header reveal">
+        <div class="eyebrow">Oferta de lanzamiento</div>
+        <h2 class="section-title" id="precio-title">Todo el pack, hoy.</h2>
+      </div>
+
+      <div class="precio-card reveal">
+        <div class="badge" style="margin-bottom:1.5rem;">🔥 Precio especial de lanzamiento</div>
+        <p class="precio-old">Valor normal: $25.000 COP</p>
+        <p class="precio-main">$15.000</p>
+        <p class="precio-note">COP · Pago único · Sin suscripción · Tuyo para siempre</p>
+
+        <ul class="precio-lista">
+          <li><span class="check">✓</span> 6 cartas premium redactadas profesionalmente</li>
+          <li><span class="check">✓</span> Personalizador interactivo con vista previa en tiempo real</li>
+          <li><span class="check">✓</span> Descarga PDF con diseño editorial de lujo</li>
+          <li><span class="check">✓</span> Copia directa para WhatsApp con un clic</li>
+          <li><span class="check">✓</span> Acceso inmediato tras el pago</li>
+          <li><span class="check">✓</span> Garantía de satisfacción 100%</li>
+        </ul>
+
+        <button class="btn-primary" onclick="abrirModal()" style="width:100%;font-size:1.05rem;padding:1.1rem;" aria-label="Ir a pago">
+          Comprar ahora — Acceso inmediato
+        </button>
+        <p style="font-size:0.75rem;color:var(--t-muted);margin-top:1rem;display:flex;align-items:center;justify-content:center;gap:0.4rem;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          Mercado Pago · Wompi · Bold — Pago 100% seguro
+        </p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ╔══════════════════════════════════════════════════════╗
+       ║  FOOTER                                            ║
+       ╚══════════════════════════════════════════════════════╝ -->
+  <footer class="footer" role="contentinfo">
+    <div class="footer-brand">El Mundo de <span>Manu</span></div>
+    <p class="footer-text">
+      © 2026 Carlos Manuel Turizo Hernández · Todos los derechos reservados<br />
+      <a href="mailto:tu@email.com" class="footer-link">Contacto</a>
+    </p>
+  </footer>
+
+
+  <!-- ╔══════════════════════════════════════════════════════╗
+       ║  MODAL DE PAGO                                     ║
+       ╚══════════════════════════════════════════════════════╝ -->
+  <div
+    class="modal-overlay"
+    id="modal-pago"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modal-title"
+  >
+    <div class="modal-box">
+      <button class="modal-close-btn" onclick="cerrarModal()" aria-label="Cerrar modal">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>
+
+      <div class="modal-header">
+        <h2 id="modal-title">¿Cómo prefieres pagar?</h2>
+        <p>Elige tu plataforma favorita. Todas son seguras.</p>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:0.75rem;" id="pasarelas-container">
+
+        <button class="pasarela-btn" onclick="iniciarPago('mercadopago')" id="btn-mp">
+          <div class="pasarela-logo" style="background:#009EE3;color:#fff;">MP</div>
+          <div class="pasarela-info">
+            <strong>Mercado Pago</strong>
+            <span>Tarjeta, PSE, efectivo, cuotas</span>
+          </div>
+          <svg class="pasarela-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 18l6-6-6-6"/>
+          </svg>
+        </button>
+
+        <button class="pasarela-btn" onclick="iniciarPago('wompi')" id="btn-wompi">
+          <div class="pasarela-logo" style="background:#5B21D0;color:#fff;">W</div>
+          <div class="pasarela-info">
+            <strong>Wompi</strong>
+            <span>Tarjeta crédito/débito, Nequi, PSE</span>
+          </div>
+          <svg class="pasarela-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 18l6-6-6-6"/>
+          </svg>
+        </button>
+
+        <button class="pasarela-btn" onclick="iniciarPago('bold')" id="btn-bold">
+          <div class="pasarela-logo" style="background:#111;color:#fff;">B</div>
+          <div class="pasarela-info">
+            <strong>Bold</strong>
+            <span>Tarjeta, transferencia, Nequi</span>
+          </div>
+          <svg class="pasarela-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 18l6-6-6-6"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-trust">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <rect x="3" y="11" width="18" height="11" rx="2"/>
+          <path d="M7 11V7a5 5 0 0110 0v4"/>
+        </svg>
+        Transacción cifrada y 100% segura
+      </div>
+
+      <button class="btn-ghost" onclick="cerrarModal()" style="width:100%;justify-content:center;margin-top:1.25rem;">
+        Cancelar
+      </button>
+    </div>
+  </div>
+
+
+  <!-- Mi toast de notificaciones — lo manipulo desde JS -->
+  <div class="toast" id="toast" role="alert" aria-live="polite"></div>
+
+  <script src="payments.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

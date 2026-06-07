@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>¡Acceso concedido! — Pack de Cartas de Amor Premium</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<main class="success-page">
+  <div class="success-card" style="animation: fadeUpCard 0.8s cubic-bezier(0.16,1,0.3,1) both;">
+
+    <!-- Mi ícono animado de éxito -->
+    <div class="success-icon" aria-hidden="true">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--c-teal)" stroke-width="2.5">
+        <path d="M20 6L9 17l-5-5"/>
+      </svg>
+    </div>
+
+    <div class="badge" style="margin-bottom:1.5rem;">✦ Pago confirmado</div>
+
+    <h1 class="success-title">¡Tu pack está listo!</h1>
+    <p class="success-sub">
+      Gracias por tu compra. Tienes acceso inmediato a tu personalizador de cartas.
+      También te enviamos un correo de confirmación.
+    </p>
+
+    <!-- Mi botón principal — lleva al personalizador -->
+    <a
+      href="personalizar.html"
+      class="btn-primary"
+      style="width:100%;font-size:1.05rem;padding:1.1rem;text-decoration:none;margin-bottom:1rem;"
+    >
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>
+      </svg>
+      Abrir mi personalizador de cartas
+    </a>
+
+    <!-- Mis pasos de uso -->
+    <div class="success-steps">
+      <h4>¿Cómo uso mis cartas?</h4>
+
+      <div class="success-step">
+        <div class="step-num">1</div>
+        <p class="step-text">Haz clic en el botón de arriba para abrir tu personalizador.</p>
+      </div>
+      <div class="success-step">
+        <div class="step-num">2</div>
+        <p class="step-text">Elige la carta que necesitas (Romántica, Intensa, Nostalgia, etc.).</p>
+      </div>
+      <div class="success-step">
+        <div class="step-num">3</div>
+        <p class="step-text">Escribe el nombre y la carta se actualiza en tiempo real.</p>
+      </div>
+      <div class="success-step">
+        <div class="step-num">4</div>
+        <p class="step-text">Cópiala para WhatsApp, descárgala en PDF o compártela directo.</p>
+      </div>
+    </div>
+
+    <!-- Mi nota de acceso permanente -->
+    <p style="font-size:0.78rem;color:var(--t-muted);margin-top:1.5rem;line-height:1.7;">
+      💡 Guarda el link del personalizador — es tuyo de por vida.<br />
+      ¿Tienes preguntas? <a href="mailto:tu@email.com" class="footer-link">Escríbeme aquí.</a>
+    </p>
+  </div>
+</main>
+
+<style>
+@keyframes fadeUpCard {
+  from { opacity:0; transform: translateY(32px) scale(0.97); }
+  to   { opacity:1; transform: translateY(0) scale(1); }
+}
+</style>
+
+<script>
+// Verifico el estado del pago que llega en la URL (Mercado Pago)
+// y muestro el contenido correspondiente
+(function() {
+  const p      = new URLSearchParams(window.location.search);
+  const estado = p.get('collection_status') || p.get('status');
+  // Si el pago no fue aprobado, redirijo a la landing con mensaje de error
+  if (estado && estado !== 'approved' && estado !== 'APPROVED') {
+    window.location.href = './index.html?pago=error';
+  }
+})();
+</script>
+
+</body>
+</html>

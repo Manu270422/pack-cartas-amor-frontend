@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Personaliza tu Carta | Pack de Cartas de Amor Premium</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="pers-layout">
+
+  <!-- ╔══════════════════════════════════════════════════════╗
+       ║  HEADER DEL PERSONALIZADOR                        ║
+       ╚══════════════════════════════════════════════════════╝ -->
+  <header class="pers-header">
+    <div class="pers-header-brand">El Mundo de <span>Manu</span> · <span style="color:var(--t-secondary);font-family:var(--f-body);font-size:0.85rem;font-weight:400;">Personalizador</span></div>
+
+    <!-- Mi selector de cartas como tabs scrollables horizontalmente -->
+    <nav class="carta-tabs" role="tablist" aria-label="Seleccionar carta">
+      <button class="carta-tab activo" role="tab" aria-selected="true"  data-carta="romantica"       onclick="cambiarCarta('romantica',this)">💌 Romántica</button>
+      <button class="carta-tab"         role="tab" aria-selected="false" data-carta="intensa"         onclick="cambiarCarta('intensa',this)">🔥 Intensa</button>
+      <button class="carta-tab"         role="tab" aria-selected="false" data-carta="nostalgica"      onclick="cambiarCarta('nostalgica',this)">🌧️ Nostálgica</button>
+      <button class="carta-tab"         role="tab" aria-selected="false" data-carta="reconciliacion"  onclick="cambiarCarta('reconciliacion',this)">🕊️ Reconciliación</button>
+      <button class="carta-tab"         role="tab" aria-selected="false" data-carta="aniversario"     onclick="cambiarCarta('aniversario',this)">🥂 Aniversario</button>
+      <button class="carta-tab"         role="tab" aria-selected="false" data-carta="cumpleanos"      onclick="cambiarCarta('cumpleanos',this)">🎂 Cumpleaños</button>
+    </nav>
+  </header>
+
+
+  <!-- ╔══════════════════════════════════════════════════════╗
+       ║  CUERPO: PANEL IZQUIERDO + PREVIEW DERECHO        ║
+       ╚══════════════════════════════════════════════════════╝ -->
+  <main class="pers-body">
+
+    <!-- Panel de personalización -->
+    <aside class="pers-panel" aria-label="Opciones de personalización">
+      <h2 class="pers-panel-title" id="panel-titulo">Carta Romántica</h2>
+
+      <div class="form-group">
+        <label class="form-label" for="input-nombre">Nombre de quien recibe 💌</label>
+        <input
+          class="form-input"
+          type="text"
+          id="input-nombre"
+          placeholder="Ej: María, Sebastián..."
+          maxlength="40"
+          autocomplete="off"
+          oninput="actualizarPreview()"
+        />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="input-firma">Tu firma (opcional)</label>
+        <input
+          class="form-input"
+          type="text"
+          id="input-firma"
+          placeholder="Ej: Con amor, Juan · Tu amor secreto..."
+          maxlength="60"
+          autocomplete="off"
+          oninput="actualizarPreview()"
+        />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="input-extra">Frase o detalle personal (opcional)</label>
+        <textarea
+          class="form-textarea"
+          id="input-extra"
+          placeholder="Escribe aquí un recuerdo, un detalle especial o una frase tuya que quieras añadir al final de la carta..."
+          maxlength="300"
+          oninput="actualizarPreview()"
+        ></textarea>
+        <p style="font-size:0.72rem;color:var(--t-muted);margin-top:0.4rem;text-align:right;">
+          <span id="char-count">0</span>/300 caracteres
+        </p>
+      </div>
+
+      <!-- Separador -->
+      <hr class="divider" style="margin:1.5rem 0;" />
+
+      <!-- Tips de uso -->
+      <div style="background:var(--c-gold-dim);border:1px solid var(--c-border-gold);border-radius:var(--r-md);padding:1rem 1.2rem;">
+        <p style="font-size:0.78rem;font-weight:700;color:var(--c-gold);margin-bottom:0.5rem;letter-spacing:0.04em;">💡 Tip de uso</p>
+        <p style="font-size:0.8rem;color:var(--t-secondary);line-height:1.6;" id="tip-carta">
+          Esta carta es perfecta para enviarla un martes sin razón. El detalle inesperado siempre impacta más que el esperado.
+        </p>
+      </div>
+    </aside>
+
+
+    <!-- Panel de preview -->
+    <section class="pers-preview" aria-label="Vista previa de la carta" aria-live="polite">
+
+      <div class="carta-sheet" id="carta-sheet" role="article">
+        <div class="carta-sheet-label">
+          <span>✦</span>
+          <span id="sheet-categoria">Carta Romántica · El Mundo de Manu</span>
+        </div>
+
+        <h3 class="carta-sheet-titulo" id="sheet-titulo">"Lo ordinario contigo es extraordinario"</h3>
+
+        <div class="carta-sheet-body" id="sheet-body">Cargando carta...</div>
+
+        <!-- Mi bloque de detalle personal — lo muestro solo si el usuario escribió algo -->
+        <div id="sheet-extra-container" style="display:none;margin-top:1.5rem;padding-top:1rem;border-top:1px solid rgba(0,0,0,0.08);">
+          <p style="font-size:0.85rem;font-style:italic;color:#555;font-family:var(--f-display);" id="sheet-extra"></p>
+        </div>
+
+        <div class="carta-sheet-firma">
+          <span id="sheet-firma">Con todo lo que soy,</span>
+        </div>
+      </div>
+
+      <!-- Mis botones de acción -->
+      <div class="pers-actions">
+        <button class="btn-primary" onclick="copiarCarta()" id="btn-copiar" title="Copiar texto para WhatsApp o correo">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+          </svg>
+          Copiar carta
+        </button>
+        <button class="btn-secondary" onclick="descargarPDF()" id="btn-pdf" title="Descargar PDF con diseño premium">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 10v6m0 0l-3-3m3 3l3-3"/><path d="M3 15v4a2 2 0 002 2h14a2 2 0 002-2v-4"/>
+          </svg>
+          Descargar PDF
+        </button>
+        <button class="btn-ghost" onclick="compartirWA()" title="Compartir directo por WhatsApp" style="flex-shrink:0;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.098.543 4.073 1.497 5.788L0 24l6.356-1.67A11.955 11.955 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.899 0-3.68-.51-5.21-1.404l-.374-.222-3.875 1.018 1.036-3.78-.242-.389A9.955 9.955 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+        </button>
+      </div>
+
+      <p style="font-size:0.72rem;color:var(--t-muted);margin-top:1rem;text-align:center;">
+        💡 El PDF incluye diseño editorial premium listo para imprimir o enviar
+      </p>
+    </section>
+
+  </main>
+</div>
+
+<!-- Mi toast de notificaciones -->
+<div class="toast" id="toast" role="alert" aria-live="polite"></div>
+
+<script>
+/*
+  Mi lógica completa del personalizador de cartas.
+  Toda la data de las cartas vive aquí en el objeto CARTAS.
+  El preview se actualiza en tiempo real con cada keypress.
+*/
+
+// ─────────────────────────────────────────────────────────────
+// MI BASE DE DATOS DE CARTAS — el contenido real del producto
+// ─────────────────────────────────────────────────────────────
+const CARTAS = {
+  romantica: {
+    nombre:    'Romántica',
+    icono:     '💌',
+    titulo:    '"Lo ordinario contigo es extraordinario"',
+    categoria: 'Carta Romántica · El Mundo de Manu',
+    tip:       'Esta carta es perfecta para enviarla un martes sin razón. El detalle inesperado siempre impacta más.',
+    firma_defecto: 'Tuyo/a, siempre.',
+    cuerpo: `[NOMBRE],
+
+Hay personas que pasan por tu vida dejando apenas una huella en la arena — y luego estás tú, que llevas tiempo construyendo algo diferente en mí. No sé exactamente cuándo pasó. Fue gradual, como la luz del amanecer que no ves llegar pero que de repente lo ilumina todo.
+
+Me gusta observarte cuando no te das cuenta. La forma en que frunces el ceño cuando piensas profundo, cómo te ríes antes de terminar el chiste porque ya no aguantas, el ruido que haces al tomar el primer café de la mañana. Son detalles absurdamente pequeños que, viniendo de ti, me parecen los más interesantes del mundo.
+
+No te escribo esto porque sea una fecha especial. Te escribo porque hoy me desperté pensando en ti antes de tener los ojos abiertos del todo, y me pareció que eso merecía ser dicho en voz alta.
+
+Contigo, lo ordinario se vuelve extraordinario. Y eso, [NOMBRE], es exactamente el tipo de amor que siempre quise tener.`
+  },
+  intensa: {
+    nombre:    'Intensa',
+    icono:     '🔥',
+    titulo:    '"Lo que no cabe en palabras"',
+    categoria: 'Carta Intensa · El Mundo de Manu',
+    tip:       'Perfecta para una noche especial o para decirle a tu pareja todo lo que no sabes cómo expresar cara a cara.',
+    firma_defecto: 'Con todo lo que soy,',
+    cuerpo: `[NOMBRE],
+
+Hay cosas que no sé cómo decirte mirándote a los ojos — no porque me dé miedo, sino porque siento que las palabras se quedan cortas. Pero hoy lo intento.
+
+Lo que siento por ti no es lo que me enseñaron que era el amor. No es tranquilo ni predecible. Es urgente. Es esa sensación de que el tiempo que no estoy contigo es tiempo que me falta, no tiempo que pasa. Es querer estar en la misma habitación que tú aunque los dos estemos en silencio absoluto, porque tu presencia es suficiente — es más que suficiente.
+
+Me has movido cosas adentro que creía que ya no se movían. Me has hecho querer ser mejor — no para impresionarte, sino porque tú te mereces a alguien que da todo, y yo quiero ser esa persona.
+
+Te deseo, [NOMBRE]. No solo como suena esa palabra a primera vista — te deseo en todos los sentidos. Y lo que más me asusta y me emociona al mismo tiempo es que creo que apenas estamos empezando.`
+  },
+  nostalgica: {
+    nombre:    'Nostálgica',
+    icono:     '🌧️',
+    titulo:    '"La distancia que no borra nada"',
+    categoria: 'Carta Nostálgica · El Mundo de Manu',
+    tip:       'Ideal para amor a distancia. Envíala cuando quieras que esa persona sepa que sigues pensando en ella.',
+    firma_defecto: 'Con todo el espacio entre nosotros, y nada de espacio en mi corazón.',
+    cuerpo: `[NOMBRE],
+
+Te escribo desde aquí, que últimamente se siente demasiado lejos de donde estás tú.
+
+La distancia tiene una crueldad muy particular: no borra nada. No hace que los recuerdos se difuminen ni que el corazón se acostumbre. Al contrario — los detalles se vuelven más nítidos. Me acuerdo de tu voz con una precisión casi dolorosa. Del olor de tu ropa. De cómo se sentía estar en el mismo espacio que tú sin necesitar decir nada.
+
+Hay momentos del día que siguen siendo tuyos aunque no estés: la hora de dormir, cuando el silencio se vuelve muy ruidoso. Las tardes cuando pasa algo gracioso y mi primer instinto sigue siendo contártelo a ti. Los domingos, que siempre supimos hacer bien juntos.
+
+No te cuento esto para entristecerte. Te lo cuento porque quiero que sepas que la distancia no ha cambiado nada de lo importante. Sigues siendo la persona que viene primero a mi mente, y la última en la que pienso antes de cerrar los ojos.
+
+Vuelve pronto. O déjame ir. Pero no me pidas que sienta menos — eso ya no puedo hacerlo.`
+  },
+  reconciliacion: {
+    nombre:    'Reconciliación',
+    icono:     '🕊️',
+    titulo:    '"Quiero hacer las cosas bien"',
+    categoria: 'Carta de Reconciliación · El Mundo de Manu',
+    tip:       'No la envíes en el momento de la pelea. Espera a que los dos estén calmados. El momento correcto lo es todo.',
+    firma_defecto: 'Lo siento de verdad.',
+    cuerpo: `[NOMBRE],
+
+He pasado este tiempo pensando. No buscando excusas — eso ya lo hice y me di cuenta de que no me llevaba a ningún lado. Pensando de verdad, con honestidad, sobre lo que pasó y sobre lo que tú mereces de mi parte.
+
+Me equivoqué. No de la manera vaga en que la gente pide perdón para cerrar el tema — me equivoqué en algo concreto: no te traté con el cuidado que merecías en ese momento. Y eso me pesa.
+
+Lo que más me cuesta no es el orgullo. Lo que más me cuesta es saber que te hice sentir algo que nunca debí hacerte sentir. Y que probablemente mientras yo estaba en mi cabeza justificando mis acciones, tú estabas cargando algo que yo puse ahí.
+
+No te pido que lo olvides de inmediato. No te pido que finjas que no pasó. Solo te pido una cosa: la oportunidad de demostrarte con hechos, no con palabras, que aprendo. Que lo que tenemos me importa lo suficiente como para hacer el trabajo de crecer.
+
+Si me la das, no la voy a desperdiciar.`
+  },
+  aniversario: {
+    nombre:    'Aniversario',
+    icono:     '🥂',
+    titulo:    '"Todo lo que hemos construido"',
+    categoria: 'Carta de Aniversario · El Mundo de Manu',
+    tip:       'Personaliza el tiempo que llevan juntos reemplazando el espacio correspondiente. Ese dato lo hace completamente tuya.',
+    firma_defecto: 'Por todo lo que viene,',
+    cuerpo: `[NOMBRE],
+
+Si pudiera mostrarte lo que veo cuando pienso en nosotros, no te mostraría una sola imagen. Te mostraría una película entera — con sus escenas de risa hasta llorar, sus momentos de silencio incómodo que supimos atravesar, sus capítulos difíciles, y todo ese tiempo ordinario y perfecto en el que simplemente existimos juntos sin necesitar que fuera nada más que eso.
+
+Hoy celebramos el tiempo que llevamos juntos. Y lo que más me sorprende no es cuánto tiempo ha pasado — es todo lo que hemos construido en él. Una forma de hablarnos que es solo nuestra. Bromas internas que no necesitan explicación. La confianza de saber que si algo se rompe, lo reparamos juntos.
+
+Eso no se improvisa, [NOMBRE]. Eso se construye. Y tú has sido un constructor/a extraordinario/a.
+
+Gracias por quedarte cuando era fácil irse. Gracias por elegirme no una vez, sino cada día. Y gracias por hacerme sentir que este camino, contigo al lado, vale absolutamente cada paso.`
+  },
+  cumpleanos: {
+    nombre:    'Cumpleaños',
+    icono:     '🎂',
+    titulo:    '"El día que llegaste al mundo"',
+    categoria: 'Carta de Cumpleaños · El Mundo de Manu',
+    tip:       'Envíala en la mañana, antes de los mensajes del grupo. Ser el/la primero/a en escribir algo de verdad marca la diferencia.',
+    firma_defecto: 'Con amor, siempre.',
+    cuerpo: `[NOMBRE],
+
+Hoy es tu día, y quiero empezarlo diciéndote algo que no siempre digo con suficiente claridad: qué afortunado/a soy de que existas.
+
+No solo porque estés en mi vida — eso ya sería suficiente — sino porque eres el tipo de persona que hace que el mundo sea un lugar más interesante para todos los que te conocen. Tienes esa capacidad rara de entrar a una habitación y hacer que algo cambie, aunque no siempre te des cuenta.
+
+En este cumpleaños no te voy a prometer el mundo. Te voy a prometer algo más real: seguir estando. Seguir siendo la persona que más te celebra, no solo hoy sino en todos los martes aburridos y en todos los momentos que no tienen fecha especial.
+
+Espero que este año te traiga todo lo que mereces. Y tú mereces mucho, [NOMBRE] — más de lo que a veces te permites recibir.
+
+Feliz cumpleaños. Hoy y todos los días, me alegra que hayas llegado a este mundo.`
+  }
+};
+
+// ─────────────────────────────────────────────────────────────
+// MI ESTADO GLOBAL DEL PERSONALIZADOR
+// ─────────────────────────────────────────────────────────────
+let miCartaActual = 'romantica';
+
+// ─────────────────────────────────────────────────────────────
+// MIS FUNCIONES PRINCIPALES
+// ─────────────────────────────────────────────────────────────
+
+/**
+ * Cambio la carta activa al hacer clic en un tab.
+ * Actualizo el estado, los tabs visuales y llamo al render.
+ */
+function cambiarCarta(id, tabBtn) {
+  miCartaActual = id;
+
+  // Actualizo el estado visual de los tabs
+  document.querySelectorAll('.carta-tab').forEach(t => {
+    t.classList.remove('activo');
+    t.setAttribute('aria-selected', 'false');
+  });
+  tabBtn.classList.add('activo');
+  tabBtn.setAttribute('aria-selected', 'true');
+
+  // Actualizo el header del panel
+  const carta = CARTAS[id];
+  document.getElementById('panel-titulo').textContent = `Carta ${carta.nombre}`;
+  document.getElementById('tip-carta').textContent     = carta.tip;
+
+  // Renderizo el preview con los valores actuales del form
+  actualizarPreview();
+
+  // Scroll suave al top del preview en móvil
+  if (window.innerWidth < 900) {
+    document.querySelector('.pers-preview').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+/**
+ * Actualizo el preview en tiempo real cuando el usuario escribe.
+ * Esta función la ejecuto en cada keypress de los inputs.
+ */
+function actualizarPreview() {
+  const carta   = CARTAS[miCartaActual];
+  const nombre  = document.getElementById('input-nombre').value.trim();
+  const firma   = document.getElementById('input-firma').value.trim();
+  const extra   = document.getElementById('input-extra').value.trim();
+
+  // Actualizo el contador de caracteres del textarea
+  document.getElementById('char-count').textContent = extra.length;
+
+  // Mi texto del nombre: uso el real o el placeholder resaltado
+  const nombreMostrar = nombre || '[Nombre]';
+
+  // Reemplazo [NOMBRE] en el cuerpo y resalto el nombre en la vista previa
+  const cuerpoConNombre = carta.cuerpo.replace(/\[NOMBRE\]/g, nombreMostrar);
+
+  // Resalto el nombre para diferenciarlo visualmente (solo si el usuario escribió algo)
+  const cuerpoHTML = nombre
+    ? cuerpoConNombre.replace(
+        new RegExp(nombre.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'),
+        `<span class="highlight-nombre">${nombre}</span>`
+      )
+    : cuerpoConNombre.replace('[Nombre]', '<span style="color:var(--c-gold);opacity:0.5;">[Nombre]</span>');
+
+  // Actualizo los elementos del DOM
+  document.getElementById('sheet-categoria').textContent = carta.categoria;
+  document.getElementById('sheet-titulo').textContent    = carta.titulo;
+  document.getElementById('sheet-body').innerHTML        = cuerpoHTML;
+  document.getElementById('sheet-firma').textContent     = firma || carta.firma_defecto;
+
+  // Muestro u oculto el bloque de detalle personal
+  const extraContainer = document.getElementById('sheet-extra-container');
+  const extraEl        = document.getElementById('sheet-extra');
+  if (extra) {
+    extraEl.textContent        = `"${extra}"`;
+    extraContainer.style.display = 'block';
+  } else {
+    extraContainer.style.display = 'none';
+  }
+}
+
+/**
+ * Copio el texto de la carta al portapapeles.
+ * Genero texto plano (sin HTML) para pegar en WhatsApp o correo.
+ */
+async function copiarCarta() {
+  const carta  = CARTAS[miCartaActual];
+  const nombre = document.getElementById('input-nombre').value.trim() || '[Nombre]';
+  const firma  = document.getElementById('input-firma').value.trim() || carta.firma_defecto;
+  const extra  = document.getElementById('input-extra').value.trim();
+
+  let textoFinal = carta.cuerpo.replace(/\[NOMBRE\]/g, nombre);
+  if (extra) textoFinal += `\n\n"${extra}"`;
+  textoFinal += `\n\n${firma}`;
+
+  try {
+    await navigator.clipboard.writeText(textoFinal);
+    mostrarToast('✅ ¡Carta copiada! Pégala donde quieras.', 'success');
+    // Feedback visual en el botón
+    const btn = document.getElementById('btn-copiar');
+    const textoOriginal = btn.innerHTML;
+    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> ¡Copiado!';
+    setTimeout(() => { btn.innerHTML = textoOriginal; }, 2000);
+  } catch {
+    mostrarToast('⚠️ No se pudo copiar. Selecciona el texto manualmente.', 'error');
+  }
+}
+
+/**
+ * Comparto directo por WhatsApp.
+ * Abro un link de wa.me con el texto de la carta pre-llenado.
+ */
+function compartirWA() {
+  const carta  = CARTAS[miCartaActual];
+  const nombre = document.getElementById('input-nombre').value.trim() || '[Nombre]';
+  const firma  = document.getElementById('input-firma').value.trim() || carta.firma_defecto;
+  const extra  = document.getElementById('input-extra').value.trim();
+
+  let texto = carta.cuerpo.replace(/\[NOMBRE\]/g, nombre);
+  if (extra) texto += `\n\n"${extra}"`;
+  texto += `\n\n${firma}`;
+
+  const url = `https://wa.me/?text=${encodeURIComponent(texto)}`;
+  window.open(url, '_blank', 'noopener,noreferrer');
+}
+
+/**
+ * Descargo un PDF simple de la carta.
+ * Uso la API nativa window.print() con una hoja de estilo específica para impresión.
+ * En el futuro puedo integrar jsPDF para un PDF más elaborado.
+ */
+function descargarPDF() {
+  mostrarToast('🎨 Preparando tu PDF...', 'info');
+  setTimeout(() => {
+    window.print();
+  }, 500);
+}
+
+// ─────────────────────────────────────────────────────────────
+// MI SISTEMA DE TOASTS
+// ─────────────────────────────────────────────────────────────
+function mostrarToast(mensaje, tipo) {
+  const toast = document.getElementById('toast');
+  toast.textContent = mensaje;
+  toast.className   = `toast show ${tipo || ''}`;
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => { toast.className = 'toast'; }, 3500);
+}
+
+// ─────────────────────────────────────────────────────────────
+// INICIO LA APLICACIÓN
+// ─────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function() {
+  // Render inicial con la carta romántica
+  actualizarPreview();
+
+  // Si viene un parámetro ?carta=X en la URL, la selecciono automáticamente
+  const params  = new URLSearchParams(window.location.search);
+  const cartaId = params.get('carta');
+  if (cartaId && CARTAS[cartaId]) {
+    const tab = document.querySelector(`[data-carta="${cartaId}"]`);
+    if (tab) cambiarCarta(cartaId, tab);
+  }
+});
+</script>
+
+<!-- Mi hoja de estilos de impresión — aplicada solo al imprimir -->
+<style>
+@media print {
+  .pers-header, .pers-panel, .pers-actions, .toast { display: none !important; }
+  .pers-body    { grid-template-columns: 1fr !important; height: auto !important; }
+  .pers-preview { padding: 0 !important; background: white !important; }
+  .carta-sheet  {
+    box-shadow: none !important; border-radius: 0 !important;
+    max-width: 100% !important; background: white !important;
+    color: black !important;
+  }
+  .carta-sheet-body, .carta-sheet-titulo, .carta-sheet-firma { color: black !important; }
+  .highlight-nombre { color: #8B6914 !important; }
+}
+</style>
+</body>
+</html>
