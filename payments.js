@@ -239,8 +239,8 @@ async function pagarConBold({ email, nombre }) {
   boton.setAttribute('data-currency',       datos.moneda);
   boton.setAttribute('data-amount',         String(datos.monto));
   boton.setAttribute('data-api-key',        datos.identity_key);
-  boton.setAttribute('data-integrity-hash', datos.firma);
-  boton.setAttribute('data-redirect-url',   datos.redirect_url);
+  boton.setAttribute('data-integrity-signature', datos.firma);   // Nombre oficial Bold
+  boton.setAttribute('data-redirection-url',      datos.redirect_url); // Nombre oficial Bold
 
   contenedor.appendChild(boton);
   document.body.appendChild(contenedor);
@@ -251,10 +251,14 @@ async function pagarConBold({ email, nombre }) {
   if (botonBold) {
     botonBold.click();
   } else {
+    // Fallback directo al checkout de Bold con los parámetros correctos según su documentación
     const params = new URLSearchParams({
-      apiKey: datos.identity_key, orderId: datos.orderId,
-      amount: datos.monto, currency: datos.moneda,
-      integrityHash: datos.firma, redirectUrl: datos.redirect_url,
+      'api-key':              datos.identity_key,
+      'order-id':             datos.orderId,
+      'amount':               String(datos.monto),
+      'currency':             datos.moneda,
+      'integrity-signature':  datos.firma,
+      'redirection-url':      datos.redirect_url,
     });
     window.location.href = `https://checkout.bold.co/payment/bold-button?${params}`;
   }
