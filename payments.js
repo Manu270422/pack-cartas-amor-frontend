@@ -206,10 +206,12 @@ async function pagarConWompi({ email, nombre }) {
 }
 
 
-// ── Bold ──
+// ── Bold — Integración personalizada con BoldCheckout API ──
+// Según doc oficial: developers.bold.co/pagos-en-linea/boton-de-pagos/integracion-manual/integracion-personalizada
 async function pagarConBold({ email, nombre }) {
   mostrarToast('⏳ Conectando con Bold...', 'info');
 
+  // Paso 1 — Pido la firma al backend
   const respuesta = await fetch(`${MI_BACKEND_URL}/api/bold-firma`, {
     method:  'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -224,44 +226,40 @@ async function pagarConBold({ email, nombre }) {
   const datos = await respuesta.json();
   if (!datos.ok) throw new Error(datos.mensaje);
 
-  await cargarScript('https://checkout.bold.co/library/boldPaymentButton.js');
+  // Paso 2 — Cargo el script de Bold con su método oficial y espero el evento
+  await new Promise((resolve, reject) => {
+    if (window.BoldCheckout) return resolve();
 
-  const anterior = document.getElementById('bold-btn-container');
-  if (anterior) anterior.remove();
+    const ya = document.querySelector('script[src="https://checkout.bold.co/library/boldPaymentButton.js"]');
+    if (ya) {
+      window.addEventListener('boldCheckoutLoaded',     resolve, { once: true });
+      window.addEventListener('boldCheckoutLoadFailed', () => reject(new Error('Error cargando Bold')), { once: true });
+      return;
+    }
 
-  const contenedor = document.createElement('div');
-  contenedor.id    = 'bold-btn-container';
-  contenedor.style.cssText = 'position:absolute;left:-9999px;top:-9999px;';
+    const js  = document.createElement('script');
+    js.onload = () => window.dispatchEvent(new Event('boldCheckoutLoaded'));
+    js.onerror = () => window.dispatchEvent(new Event('boldCheckoutLoadFailed'));
+    js.src    = 'https://checkout.bold.co/library/boldPaymentButton.js';
+    document.head.appendChild(js);
 
-  const boton = document.createElement('script');
-  boton.setAttribute('data-bold-button',    '');
-  boton.setAttribute('data-order-id',       datos.orderId);
-  boton.setAttribute('data-currency',       datos.moneda);
-  boton.setAttribute('data-amount',         String(datos.monto));
-  boton.setAttribute('data-api-key',        datos.identity_key);
-  boton.setAttribute('data-integrity-signature', datos.firma);   // Nombre oficial Bold
-  boton.setAttribute('data-redirection-url',      datos.redirect_url); // Nombre oficial Bold
+    window.addEventListener('boldCheckoutLoaded',     resolve, { once: true });
+    window.addEventListener('boldCheckoutLoadFailed', () => reject(new Error('Error cargando Bold')), { once: true });
+  });
 
-  contenedor.appendChild(boton);
-  document.body.appendChild(contenedor);
+  // Paso 3 — Creo instancia BoldCheckout y abro el modal
+  // Método oficial según documentación de integración personalizada de Bold
+  const checkout = new window.BoldCheckout({
+    orderId:            datos.orderId,
+    currency:           datos.moneda,
+    amount:             String(datos.monto),
+    apiKey:             datos.identity_key,
+    integritySignature: datos.firma,
+    redirectionUrl:     datos.redirect_url,
+    description:        'Pack de Cartas de Amor Premium — El Mundo de Manu',
+  });
 
-  await esperar(800);
-
-  const botonBold = contenedor.querySelector('button') || contenedor.querySelector('a');
-  if (botonBold) {
-    botonBold.click();
-  } else {
-    // Fallback directo al checkout de Bold con los parámetros correctos según su documentación
-    const params = new URLSearchParams({
-      'api-key':              datos.identity_key,
-      'order-id':             datos.orderId,
-      'amount':               String(datos.monto),
-      'currency':             datos.moneda,
-      'integrity-signature':  datos.firma,
-      'redirection-url':      datos.redirect_url,
-    });
-    window.location.href = `https://checkout.bold.co/payment/bold-button?${params}`;
-  }
+  checkout.open();
 }
 
 
