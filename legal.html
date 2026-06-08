@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Política de Privacidad y Términos | El Mundo de Manu</title>
+  <meta name="description" content="Política de privacidad, términos y condiciones del Pack de Cartas de Amor Premium — El Mundo de Manu."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+
+  <style>
+    :root {
+      --bg:       #FAFAF8;
+      --bg-2:     #FFFFFF;
+      --ink:      #1A1A1A;
+      --ink-2:    #555550;
+      --ink-3:    #999990;
+      --accent:   #B8862A;
+      --teal:     #2A7A6F;
+      --border:   #E8E5DF;
+      --border-gold: rgba(184,134,42,0.2);
+      --f-display: 'Cormorant Garamond', Georgia, serif;
+      --f-body:    'DM Sans', system-ui, sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--f-body);
+      font-size: 1rem;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Header ── */
+    .site-header {
+      background: var(--bg-2);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 10;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    }
+    .site-header-brand {
+      font-family: var(--f-display);
+      font-size: 1.15rem; font-weight: 400;
+    }
+    .site-header-brand span { color: var(--accent); }
+    .site-header a {
+      font-size: 0.82rem; color: var(--ink-2);
+      text-decoration: none; display: flex; align-items: center; gap: 0.3rem;
+    }
+    .site-header a:hover { color: var(--accent); }
+
+    /* ── Hero legal ── */
+    .hero-legal {
+      background: linear-gradient(135deg, #1A1A1A 0%, #2D2A25 100%);
+      padding: 4rem 2rem 3rem;
+      text-align: center;
+    }
+    .hero-legal-eyebrow {
+      font-size: 0.7rem; font-weight: 600; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+    .hero-legal-titulo {
+      font-family: var(--f-display);
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 400; color: #FFFFFF;
+      margin-bottom: 0.75rem; line-height: 1.15;
+    }
+    .hero-legal-sub {
+      font-size: 0.9rem; color: rgba(255,255,255,0.5);
+      max-width: 520px; margin: 0 auto;
+    }
+
+    /* ── Índice de navegación ── */
+    .indice {
+      background: var(--bg-2);
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 2rem;
+      overflow-x: auto; scrollbar-width: none;
+      display: flex; gap: 0.25rem; white-space: nowrap;
+    }
+    .indice::-webkit-scrollbar { display: none; }
+    .indice a {
+      font-size: 0.78rem; color: var(--ink-2);
+      text-decoration: none; padding: 0.4rem 0.8rem;
+      border-radius: 99px;
+      transition: all 0.2s ease;
+    }
+    .indice a:hover { background: rgba(184,134,42,0.08); color: var(--accent); }
+
+    /* ── Layout principal ── */
+    .contenido {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 3rem 2rem 6rem;
+    }
+
+    /* ── Secciones ── */
+    .seccion {
+      margin-bottom: 3.5rem;
+      padding-bottom: 3.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .seccion:last-child { border-bottom: none; }
+
+    .seccion-numero {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+    .seccion-titulo {
+      font-family: var(--f-display);
+      font-size: 1.7rem; font-weight: 400;
+      color: var(--ink); margin-bottom: 1.25rem;
+      line-height: 1.2;
+    }
+    .seccion-subtitulo {
+      font-size: 1rem; font-weight: 600;
+      color: var(--ink); margin: 1.5rem 0 0.6rem;
+    }
+
+    p { color: var(--ink-2); margin-bottom: 1rem; }
+    p:last-child { margin-bottom: 0; }
+
+    ul, ol {
+      color: var(--ink-2);
+      padding-left: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    li { margin-bottom: 0.4rem; }
+
+    /* ── Cajas especiales ── */
+    .caja-info {
+      background: rgba(42,122,111,0.06);
+      border: 1px solid rgba(42,122,111,0.2);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0;
+    }
+    .caja-info p { color: var(--ink-2); margin: 0; font-size: 0.9rem; }
+    .caja-info strong { color: var(--teal); }
+
+    .caja-advertencia {
+      background: rgba(184,134,42,0.06);
+      border: 1px solid var(--border-gold);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0;
+    }
+    .caja-advertencia p { color: var(--ink-2); margin: 0; font-size: 0.9rem; }
+    .caja-advertencia strong { color: var(--accent); }
+
+    /* ── Tabla ── */
+    .tabla-datos {
+      width: 100%; border-collapse: collapse;
+      margin: 1.25rem 0; font-size: 0.88rem;
+    }
+    .tabla-datos th {
+      background: #F5F2EC;
+      padding: 0.6rem 0.9rem; text-align: left;
+      font-weight: 600; color: var(--ink);
+      border-bottom: 1px solid var(--border);
+    }
+    .tabla-datos td {
+      padding: 0.6rem 0.9rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--ink-2); vertical-align: top;
+    }
+    .tabla-datos tr:last-child td { border-bottom: none; }
+
+    /* ── Fecha de actualización ── */
+    .meta-legal {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 3rem;
+      display: flex; flex-direction: column; gap: 0.3rem;
+    }
+    .meta-legal p { margin: 0; font-size: 0.82rem; color: var(--ink-3); }
+    .meta-legal strong { color: var(--ink-2); }
+
+    /* ── Footer ── */
+    .footer-legal {
+      background: var(--ink);
+      padding: 2rem;
+      text-align: center;
+    }
+    .footer-legal p { font-size: 0.78rem; color: rgba(255,255,255,0.3); margin: 0; line-height: 1.8; }
+    .footer-legal a { color: rgba(255,255,255,0.5); text-decoration: none; }
+    .footer-legal a:hover { color: var(--accent); }
+
+    @media (max-width: 600px) {
+      .contenido { padding: 2rem 1.25rem 5rem; }
+      .hero-legal { padding: 3rem 1.25rem 2rem; }
+      .tabla-datos { font-size: 0.8rem; }
+      .tabla-datos th, .tabla-datos td { padding: 0.5rem 0.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="site-header-brand">El Mundo de <span>Manu</span></div>
+    <a href="index.html">← Volver al inicio</a>
+  </header>
+
+  <!-- Hero -->
+  <div class="hero-legal">
+    <p class="hero-legal-eyebrow">Documentos legales</p>
+    <h1 class="hero-legal-titulo">Política de Privacidad<br/>y Términos de Uso</h1>
+    <p class="hero-legal-sub">Pack de Cartas de Amor Premium — El Mundo de Manu</p>
+  </div>
+
+  <!-- Índice de navegación rápida -->
+  <nav class="indice" aria-label="Índice del documento">
+    <a href="#identificacion">1. Identificación</a>
+    <a href="#aceptacion">2. Aceptación</a>
+    <a href="#producto">3. El Producto</a>
+    <a href="#precios">4. Precios y Pagos</a>
+    <a href="#entrega">5. Entrega y Acceso</a>
+    <a href="#reembolsos">6. Reembolsos</a>
+    <a href="#privacidad">7. Privacidad</a>
+    <a href="#datos">8. Tus Datos</a>
+    <a href="#propiedad">9. Propiedad Intelectual</a>
+    <a href="#limitaciones">10. Limitaciones</a>
+    <a href="#contacto">11. Contacto</a>
+  </nav>
+
+  <!-- Contenido principal -->
+  <main class="contenido">
+
+    <!-- Meta del documento -->
+    <div class="meta-legal">
+      <p><strong>Última actualización:</strong> Junio de 2026</p>
+      <p><strong>Versión:</strong> 1.0</p>
+      <p><strong>Aplica a:</strong> Pack de Cartas de Amor Premium y todos los productos digitales comercializados en https://manu270422.github.io/elmundodemanu/</p>
+    </div>
+
+
+    <!-- 1. IDENTIFICACIÓN DEL RESPONSABLE -->
+    <section class="seccion" id="identificacion">
+      <p class="seccion-numero">Artículo 01</p>
+      <h2 class="seccion-titulo">Identificación del Responsable</h2>
+
+      <p>El presente documento regula la relación entre el usuario y <strong>Carlos Manuel Turizo Hernández</strong>, identificado con cédula de ciudadanía, con domicilio en Barrancabermeja, Santander, Colombia, operando bajo la marca comercial <strong>"El Mundo de Manu"</strong>.</p>
+
+      <table class="tabla-datos">
+        <tr><th>Dato</th><th>Información</th></tr>
+        <tr><td>Nombre comercial</td><td>El Mundo de Manu</td></tr>
+        <tr><td>Responsable</td><td>Carlos Manuel Turizo Hernández</td></tr>
+        <tr><td>Ciudad</td><td>Barrancabermeja, Santander, Colombia</td></tr>
+        <tr><td>Correo electrónico</td><td>elmundodemanu2704@gmail.com</td></tr>
+        <tr><td>Sitio web</td><td>pack-cartas-amor.netlify.app</td></tr>
+        <tr><td>País de operación</td><td>República de Colombia</td></tr>
+      </table>
+    </section>
+
+
+    <!-- 2. ACEPTACIÓN -->
+    <section class="seccion" id="aceptacion">
+      <p class="seccion-numero">Artículo 02</p>
+      <h2 class="seccion-titulo">Aceptación de los Términos</h2>
+
+      <p>Al realizar una compra en este sitio web, el usuario declara haber leído, entendido y aceptado íntegramente los presentes Términos y Condiciones y la Política de Privacidad. Esta aceptación constituye un acuerdo legal vinculante entre el usuario y El Mundo de Manu.</p>
+
+      <p>Si el usuario no está de acuerdo con alguno de estos términos, deberá abstenerse de realizar la compra. El uso continuado del sitio web y del producto adquirido implica la aceptación de estos términos en su versión vigente.</p>
+
+      <div class="caja-info">
+        <p><strong>Nota:</strong> Estos términos aplican a todos los productos digitales ofrecidos en este sitio. Nos reservamos el derecho de actualizar este documento; los cambios se notificarán a través del sitio web o por correo electrónico.</p>
+      </div>
+    </section>
+
+
+    <!-- 3. DESCRIPCIÓN DEL PRODUCTO -->
+    <section class="seccion" id="producto">
+      <p class="seccion-numero">Artículo 03</p>
+      <h2 class="seccion-titulo">Descripción del Producto</h2>
+
+      <p>El <strong>Pack de Cartas de Amor Premium</strong> es un producto digital que consiste en:</p>
+
+      <ul>
+        <li>Seis (6) cartas de amor redactadas profesionalmente para distintos contextos emocionales: romántica, intensa, nostálgica, reconciliación, aniversario y cumpleaños.</li>
+        <li>Acceso a un personalizador web interactivo que permite al usuario editar el contenido, agregar nombres, firmas y detalles personales.</li>
+        <li>Funcionalidades de descarga en formato imagen (PNG) y copia directa del texto.</li>
+        <li>Opciones de compartir el contenido por WhatsApp, Telegram, correo electrónico y otras plataformas.</li>
+      </ul>
+
+      <p class="seccion-subtitulo">Naturaleza del producto</p>
+      <p>Este es un <strong>producto digital de uso personal</strong>. No es un servicio de redacción a medida, consultoría emocional ni servicio de mensajería. El contenido de las cartas es material de inspiración y referencia que el usuario adapta a sus necesidades personales.</p>
+
+      <p>El contenido está en idioma español y diseñado para el contexto cultural hispanohablante, especialmente Colombia y Latinoamérica.</p>
+
+      <div class="caja-advertencia">
+        <p><strong>Importante:</strong> Al ser un producto digital que se entrega de forma inmediata al completar el pago, el usuario reconoce que pierde el derecho de retracto establecido en el artículo 47 de la Ley 1480 de 2011 (Estatuto del Consumidor) una vez acceda al contenido digital, de conformidad con las excepciones previstas para contenidos digitales.</p>
+      </div>
+    </section>
+
+
+    <!-- 4. PRECIOS Y PAGOS -->
+    <section class="seccion" id="precios">
+      <p class="seccion-numero">Artículo 04</p>
+      <h2 class="seccion-titulo">Precios, Pagos y Pasarelas</h2>
+
+      <p>Todos los precios están expresados en <strong>pesos colombianos (COP)</strong> e incluyen todos los impuestos aplicables. El precio mostrado en el momento de la compra es el precio final.</p>
+
+      <p class="seccion-subtitulo">Pasarelas de pago habilitadas</p>
+      <p>El procesamiento de pagos se realiza a través de plataformas externas certificadas. El Mundo de Manu <strong>no almacena datos de tarjetas de crédito o débito</strong> en ningún momento. Las transacciones son gestionadas íntegramente por:</p>
+
+      <table class="tabla-datos">
+        <tr>
+          <th>Pasarela</th>
+          <th>Métodos aceptados</th>
+          <th>Política de seguridad</th>
+        </tr>
+        <tr>
+          <td><strong>Mercado Pago</strong></td>
+          <td>Tarjeta crédito/débito, PSE, efectivo (Efecty, Baloto), cuotas</td>
+          <td>mercadopago.com.co/privacidad</td>
+        </tr>
+        <tr>
+          <td><strong>Wompi (Bancolombia)</strong></td>
+          <td>Tarjeta crédito/débito, Nequi, PSE, transferencia Bancolombia</td>
+          <td>wompi.co/politicas</td>
+        </tr>
+        <tr>
+          <td><strong>Bold</strong></td>
+          <td>Tarjeta crédito/débito, Nequi, transferencia bancaria</td>
+          <td>bold.co/legal</td>
+        </tr>
+      </table>
+
+      <p>El usuario acepta someterse a los términos y condiciones de la pasarela de pago que elija al momento de realizar la transacción. El Mundo de Manu no es responsable por interrupciones, errores o rechazos ocasionados por dichas plataformas.</p>
+
+      <p class="seccion-subtitulo">Seguridad de las transacciones</p>
+      <p>Todas las transacciones utilizan cifrado SSL/TLS. Los datos financieros del usuario nunca transitan por los servidores de El Mundo de Manu — van directamente a la pasarela de pago seleccionada.</p>
+    </section>
+
+
+    <!-- 5. ENTREGA Y ACCESO -->
+    <section class="seccion" id="entrega">
+      <p class="seccion-numero">Artículo 05</p>
+      <h2 class="seccion-titulo">Entrega y Acceso al Producto</h2>
+
+      <p class="seccion-subtitulo">Entrega inmediata</p>
+      <p>Una vez confirmado el pago exitosamente, el sistema genera automáticamente un <strong>enlace de acceso personal e intransferible</strong> que es enviado al correo electrónico proporcionado por el usuario durante el proceso de pago. Este enlace permite acceder al personalizador de cartas en cualquier momento y desde cualquier dispositivo.</p>
+
+      <p class="seccion-subtitulo">Carácter permanente del acceso</p>
+      <p>El acceso al producto digital es <strong>permanente y de por vida</strong>. El usuario puede acceder al personalizador tantas veces como desee usando el enlace recibido en su correo electrónico. No existen cargos adicionales ni suscripciones para mantener el acceso.</p>
+
+      <p class="seccion-subtitulo">Responsabilidad del correo electrónico</p>
+      <p>Es responsabilidad exclusiva del usuario proporcionar una dirección de correo electrónico válida y activa durante el proceso de pago. El Mundo de Manu no se hace responsable por la no recepción del acceso debida a:</p>
+      <ul>
+        <li>Errores tipográficos en el correo proporcionado</li>
+        <li>Filtros de spam o correo no deseado del proveedor del usuario</li>
+        <li>Bandeja de entrada llena o cuenta inactiva</li>
+        <li>Restricciones del proveedor de correo del usuario</li>
+      </ul>
+
+      <div class="caja-info">
+        <p><strong>¿No recibiste tu acceso?</strong> Si no encuentras el correo en tu bandeja principal, revisa la carpeta de spam o correo no deseado. Si el problema persiste, contáctanos a <strong>elmundodemanu2704@gmail.com</strong> con el comprobante de pago y te enviamos el acceso manualmente en un plazo máximo de 24 horas hábiles.</p>
+      </div>
+
+      <p class="seccion-subtitulo">Disponibilidad del servicio</p>
+      <p>El Mundo de Manu realiza los esfuerzos razonables para mantener el personalizador disponible de forma continua. Sin embargo, pueden presentarse interrupciones temporales por mantenimiento, actualizaciones o causas de fuerza mayor. En esos casos, el acceso se restablecerá a la brevedad posible.</p>
+    </section>
+
+
+    <!-- 6. REEMBOLSOS Y GARANTÍA -->
+    <section class="seccion" id="reembolsos">
+      <p class="seccion-numero">Artículo 06</p>
+      <h2 class="seccion-titulo">Política de Reembolsos y Garantía</h2>
+
+      <p class="seccion-subtitulo">Garantía de satisfacción</p>
+      <p>El Mundo de Manu ofrece una <strong>garantía de satisfacción</strong>. Si el usuario no está satisfecho con el producto, puede solicitar un reembolso completo dentro de los <strong>7 días calendario</strong> siguientes a la fecha de compra, siempre que:</p>
+      <ul>
+        <li>La solicitud se realice dentro del plazo establecido</li>
+        <li>Se proporcione una razón de la insatisfacción</li>
+        <li>No se hayan descargado o compartido los materiales de forma masiva</li>
+      </ul>
+
+      <p class="seccion-subtitulo">Procedimiento de reembolso</p>
+      <p>Para solicitar un reembolso, el usuario debe enviar un correo a <strong>elmundodemanu2704@gmail.com</strong> con el asunto "Solicitud de reembolso" incluyendo: nombre completo, correo con el que realizó la compra y número de referencia de la transacción.</p>
+
+      <p>El reembolso se procesará en un plazo de <strong>5 a 10 días hábiles</strong>, dependiendo de la pasarela de pago utilizada. El monto se acreditará por el mismo medio de pago utilizado en la compra.</p>
+
+      <p class="seccion-subtitulo">Casos en que no aplica el reembolso</p>
+      <ul>
+        <li>Solicitudes realizadas después de 7 días calendario de la compra</li>
+        <li>Cuando el usuario ha utilizado extensivamente el producto (más de 10 usos documentados)</li>
+        <li>Solicitudes que no incluyan la información requerida</li>
+        <li>Pagos realizados con errores del usuario (monto equivocado, doble pago) — estos se tramitan directamente con la pasarela</li>
+      </ul>
+    </section>
+
+
+    <!-- 7. POLÍTICA DE PRIVACIDAD -->
+    <section class="seccion" id="privacidad">
+      <p class="seccion-numero">Artículo 07</p>
+      <h2 class="seccion-titulo">Política de Privacidad</h2>
+
+      <p>De conformidad con la <strong>Ley 1581 de 2012</strong> (Ley de Protección de Datos Personales de Colombia) y el <strong>Decreto 1377 de 2013</strong>, El Mundo de Manu informa al usuario sobre el tratamiento que se da a sus datos personales.</p>
+
+      <p class="seccion-subtitulo">Responsable del tratamiento</p>
+      <p>Carlos Manuel Turizo Hernández, operando como El Mundo de Manu, con correo de contacto elmundodemanu2704@gmail.com, es el responsable del tratamiento de los datos personales recopilados a través de este sitio.</p>
+
+      <p class="seccion-subtitulo">Datos que recopilamos</p>
+      <table class="tabla-datos">
+        <tr>
+          <th>Dato</th>
+          <th>Finalidad</th>
+          <th>Base legal</th>
+        </tr>
+        <tr>
+          <td>Correo electrónico</td>
+          <td>Enviar el acceso al producto, notificaciones importantes</td>
+          <td>Ejecución del contrato</td>
+        </tr>
+        <tr>
+          <td>Nombre (opcional)</td>
+          <td>Personalizar la comunicación</td>
+          <td>Consentimiento del usuario</td>
+        </tr>
+        <tr>
+          <td>Datos de pago</td>
+          <td>Procesamiento de la transacción</td>
+          <td>Ejecución del contrato (gestionado por la pasarela)</td>
+        </tr>
+        <tr>
+          <td>Historial de accesos</td>
+          <td>Verificación de acceso legítimo, estadísticas internas</td>
+          <td>Interés legítimo</td>
+        </tr>
+        <tr>
+          <td>Dirección IP</td>
+          <td>Seguridad y prevención de fraude</td>
+          <td>Interés legítimo</td>
+        </tr>
+      </table>
+
+      <p class="seccion-subtitulo">Datos que NO recopilamos</p>
+      <ul>
+        <li>Números de tarjeta de crédito o débito</li>
+        <li>Contraseñas bancarias</li>
+        <li>Documentos de identidad</li>
+        <li>Información de menores de edad</li>
+        <li>Datos biométricos</li>
+      </ul>
+
+      <p class="seccion-subtitulo">Transferencia de datos a terceros</p>
+      <p>Sus datos pueden ser compartidos con los siguientes terceros únicamente para los fines descritos:</p>
+      <ul>
+        <li><strong>Supabase Inc.</strong> — almacenamiento seguro de tokens de acceso y registros de compra (servidores en USA, bajo Privacy Shield)</li>
+        <li><strong>Resend Inc.</strong> — envío de correos electrónicos transaccionales</li>
+        <li><strong>Mercado Pago / Wompi / Bold</strong> — procesamiento del pago</li>
+        <li><strong>Render Inc.</strong> — infraestructura del servidor backend</li>
+        <li><strong>Netlify Inc.</strong> — alojamiento del sitio web</li>
+      </ul>
+      <p>No vendemos, alquilamos ni compartimos sus datos con terceros para fines publicitarios o comerciales.</p>
+    </section>
+
+
+    <!-- 8. DERECHOS SOBRE TUS DATOS -->
+    <section class="seccion" id="datos">
+      <p class="seccion-numero">Artículo 08</p>
+      <h2 class="seccion-titulo">Tus Derechos sobre tus Datos</h2>
+
+      <p>De conformidad con la Ley 1581 de 2012, el usuario titular de los datos tiene los siguientes derechos, los cuales puede ejercer de forma gratuita:</p>
+
+      <ul>
+        <li><strong>Acceso:</strong> Conocer qué datos personales tenemos sobre usted</li>
+        <li><strong>Rectificación:</strong> Corregir datos inexactos o incompletos</li>
+        <li><strong>Supresión:</strong> Solicitar la eliminación de sus datos (derecho al olvido)</li>
+        <li><strong>Oposición:</strong> Oponerse al tratamiento de sus datos para fines específicos</li>
+        <li><strong>Portabilidad:</strong> Recibir sus datos en formato estructurado y legible</li>
+        <li><strong>Revocación del consentimiento:</strong> Retirar el consentimiento en cualquier momento</li>
+      </ul>
+
+      <p>Para ejercer cualquiera de estos derechos, envíe una solicitud a <strong>elmundodemanu2704@gmail.com</strong> con el asunto "Derechos ARCO" incluyendo su nombre completo y correo electrónico con el que realizó la compra. Daremos respuesta en un plazo máximo de <strong>10 días hábiles</strong>.</p>
+
+      <p class="seccion-subtitulo">Retención de datos</p>
+      <p>Los datos de compra se conservan mientras el usuario mantenga acceso activo al producto o por el tiempo requerido por obligaciones legales y fiscales. Los datos de acceso se pueden eliminar a solicitud expresa del usuario, entendiéndose que esto implica la pérdida del acceso al producto.</p>
+
+      <p class="seccion-subtitulo">Menores de edad</p>
+      <p>Este sitio web y sus productos no están dirigidos a menores de 18 años. Si tiene conocimiento de que un menor ha proporcionado datos personales, contáctenos para proceder con su eliminación inmediata.</p>
+    </section>
+
+
+    <!-- 9. PROPIEDAD INTELECTUAL -->
+    <section class="seccion" id="propiedad">
+      <p class="seccion-numero">Artículo 09</p>
+      <h2 class="seccion-titulo">Propiedad Intelectual y Licencia de Uso</h2>
+
+      <p>Todo el contenido de este sitio web y del producto digital — incluyendo pero no limitado a textos de las cartas, diseños, código, marca "El Mundo de Manu", logotipos e imágenes — es propiedad exclusiva de Carlos Manuel Turizo Hernández y está protegido por las leyes de propiedad intelectual de Colombia y tratados internacionales.</p>
+
+      <p class="seccion-subtitulo">Licencia otorgada al usuario</p>
+      <p>Al adquirir el Pack de Cartas de Amor Premium, El Mundo de Manu otorga al usuario una <strong>licencia personal, no exclusiva, no transferible e ilimitada en el tiempo</strong> para:</p>
+      <ul>
+        <li>Leer, copiar y personalizar el contenido de las cartas para uso personal</li>
+        <li>Enviar las cartas personalizadas a destinatarios individuales por canales privados</li>
+        <li>Imprimir las cartas para uso personal</li>
+        <li>Descargar las imágenes generadas para compartir en redes sociales personales</li>
+      </ul>
+
+      <p class="seccion-subtitulo">Usos NO permitidos</p>
+      <ul>
+        <li>Revender, sublicenciar o distribuir el producto o su contenido a terceros</li>
+        <li>Publicar las cartas completas en medios públicos atribuyéndolas como creación propia</li>
+        <li>Usar el contenido con fines comerciales sin autorización escrita</li>
+        <li>Compartir el enlace de acceso personal con otras personas</li>
+        <li>Crear productos derivados para comercialización</li>
+        <li>Realizar ingeniería inversa del código del personalizador</li>
+      </ul>
+
+      <div class="caja-advertencia">
+        <p><strong>El incumplimiento de estos términos puede resultar en la revocación del acceso sin derecho a reembolso</strong> y podrá dar lugar a acciones legales conforme a la Ley 23 de 1982 y la Decisión Andina 351 sobre derechos de autor.</p>
+      </div>
+    </section>
+
+
+    <!-- 10. LIMITACIONES DE RESPONSABILIDAD -->
+    <section class="seccion" id="limitaciones">
+      <p class="seccion-numero">Artículo 10</p>
+      <h2 class="seccion-titulo">Limitaciones de Responsabilidad</h2>
+
+      <p>El Mundo de Manu proporciona el producto digital "tal como está". En la máxima medida permitida por la ley colombiana, no garantizamos ni somos responsables por:</p>
+
+      <ul>
+        <li>Los resultados emocionales o relacionales derivados del uso de las cartas</li>
+        <li>Interrupciones del servicio causadas por terceros (proveedores de hosting, internet, etc.)</li>
+        <li>Pérdida de acceso derivada de la pérdida del enlace o cambio de correo electrónico por parte del usuario</li>
+        <li>Incompatibilidad del personalizador con dispositivos o navegadores no soportados</li>
+        <li>Daños indirectos, incidentales o consecuentes derivados del uso del producto</li>
+      </ul>
+
+      <p>La responsabilidad máxima de El Mundo de Manu frente al usuario en cualquier caso no excederá el valor pagado por el producto.</p>
+
+      <p class="seccion-subtitulo">Ley aplicable y jurisdicción</p>
+      <p>Los presentes términos se rigen por las leyes de la <strong>República de Colombia</strong>. Cualquier controversia que surja de la interpretación o ejecución de estos términos será sometida a la jurisdicción de los tribunales competentes de la ciudad de <strong>Barrancabermeja, Santander</strong>, salvo que la ley colombiana disponga un fuero especial obligatorio para el consumidor.</p>
+    </section>
+
+
+    <!-- 11. CONTACTO -->
+    <section class="seccion" id="contacto">
+      <p class="seccion-numero">Artículo 11</p>
+      <h2 class="seccion-titulo">Contacto y Reclamaciones</h2>
+
+      <p>Para cualquier consulta, solicitud o reclamación relacionada con estos términos, el producto o el tratamiento de sus datos personales, puede contactarnos a través de:</p>
+
+      <table class="tabla-datos">
+        <tr><th>Canal</th><th>Detalle</th><th>Tiempo de respuesta</th></tr>
+        <tr>
+          <td>Correo electrónico</td>
+          <td>elmundodemanu2704@gmail.com</td>
+          <td>24–48 horas hábiles</td>
+        </tr>
+        <tr>
+          <td>Asunto reembolso</td>
+          <td>"Solicitud de reembolso" al mismo correo</td>
+          <td>48 horas hábiles</td>
+        </tr>
+        <tr>
+          <td>Asunto datos personales</td>
+          <td>"Derechos ARCO" al mismo correo</td>
+          <td>10 días hábiles</td>
+        </tr>
+      </table>
+
+      <div class="caja-info">
+        <p><strong>Compromiso de respuesta:</strong> Nos comprometemos a responder toda consulta o reclamación dentro de los plazos indicados. Si no recibe respuesta en ese tiempo, puede escalar su reclamación ante la <strong>Superintendencia de Industria y Comercio (SIC)</strong> de Colombia a través de www.sic.gov.co.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer-legal">
+    <p>
+      © 2026 El Mundo de Manu · Colombia<br/>
+      <a href="index.html">Volver al inicio</a> ·
+      <a href="mailto:elmundodemanu2704@gmail.com">Contacto</a>
+    </p>
+  </footer>
+
+</body>
+</html>
