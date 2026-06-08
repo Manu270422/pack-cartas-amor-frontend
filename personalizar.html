@@ -660,6 +660,15 @@
     <!-- Panel preview -->
     <main class="panel-preview" id="panel-preview" role="main">
 
+
+      <!-- Mi botón de volver al editor — solo visible en móvil -->
+      <button class="btn-volver-editor" onclick="volverEditorMovil()" aria-label="Volver al editor">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M19 12H5m0 0l7-7m-7 7l7 7"/>
+        </svg>
+        ← Editar mi carta
+      </button>
+
       <!-- Mi hoja de carta — la que el cliente ve y comparte -->
       <div class="carta-sheet estilo-clasico" id="carta-sheet">
         <div class="carta-inner" id="carta-capture">
@@ -743,6 +752,35 @@ Comienza escribiendo en el panel de la izquierda o directamente aquí.">
 
     </main>
   </div>
+  <!-- ════════════════════════════════════
+       BARRA DE NAVEGACIÓN MÓVIL — fija abajo
+       Permite cambiar de carta y ver el preview sin scrollear
+       ════════════════════════════════════ -->
+  <nav class="nav-movil" id="nav-movil" aria-label="Navegación entre cartas">
+    <button class="nav-movil-btn" id="btn-carta-anterior" onclick="navegarCarta(-1)" title="Carta anterior" aria-label="Carta anterior">
+      ←
+    </button>
+
+    <div class="nav-movil-centro">
+      <span class="nav-cat-emoji" id="nav-emoji">💌</span>
+      <span class="nav-cat-nombre" id="nav-nombre">Romántica</span>
+      <span class="nav-cat-progreso" id="nav-progreso">1 / 6</span>
+    </div>
+
+    <button class="nav-movil-btn" id="btn-carta-siguiente" onclick="navegarCarta(1)" title="Carta siguiente" aria-label="Carta siguiente">
+      →
+    </button>
+
+    <button class="btn-ver-carta" onclick="verPreviewMovil()" id="btn-ver-carta">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+        <circle cx="12" cy="12" r="3"/>
+      </svg>
+      Ver carta
+    </button>
+  </nav>
+
+
 
   <!-- Toast de notificaciones -->
   <div class="toast" id="toast" role="alert" aria-live="polite"></div>
@@ -1132,6 +1170,97 @@ Feliz cumpleaños. Hoy y todos los días, me alegra que hayas llegado a este mun
       const tab = document.querySelector(`[data-cat="${cat}"]`);
       if (tab) cambiarCategoria(cat, tab);
     }
+  });
+
+  // ════════════════════════════════════
+  // MI NAVEGACIÓN MÓVIL ENTRE CARTAS
+  // ════════════════════════════════════
+
+  // Mi orden de las categorías para navegar con flechas
+  const ORDEN_CATEGORIAS = [
+    'romantica', 'intensa', 'nostalgica', 'reconciliacion', 'aniversario', 'cumpleanos'
+  ];
+  const EMOJIS_CATEGORIAS = {
+    romantica: '💌', intensa: '🔥', nostalgica: '🌧️',
+    reconciliacion: '🕊️', aniversario: '🥂', cumpleanos: '🎂'
+  };
+
+  // Navego a la carta anterior o siguiente con las flechas
+  function navegarCarta(direccion) {
+    const indiceActual = ORDEN_CATEGORIAS.indexOf(miCategoria);
+    const nuevoIndice  = indiceActual + direccion;
+
+    if (nuevoIndice < 0 || nuevoIndice >= ORDEN_CATEGORIAS.length) return;
+
+    const nuevaCat = ORDEN_CATEGORIAS[nuevoIndice];
+    const tab      = document.querySelector(`[data-cat="${nuevaCat}"]`);
+    if (tab) {
+      cambiarCategoria(nuevaCat, tab);
+      // Scroll horizontal al tab activo para que sea visible
+      tab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
+  }
+
+  // Actualizo la barra de navegación móvil cuando cambia la categoría
+  function actualizarNavMovil() {
+    const indice = ORDEN_CATEGORIAS.indexOf(miCategoria);
+    const cat    = CATEGORIAS[miCategoria];
+
+    // Actualizo emoji, nombre y progreso
+    const navEmoji    = document.getElementById('nav-emoji');
+    const navNombre   = document.getElementById('nav-nombre');
+    const navProgreso = document.getElementById('nav-progreso');
+    if (navEmoji)    navEmoji.textContent    = EMOJIS_CATEGORIAS[miCategoria];
+    if (navNombre)   navNombre.textContent   = cat.nombre;
+    if (navProgreso) navProgreso.textContent = `${indice + 1} / ${ORDEN_CATEGORIAS.length}`;
+
+    // Deshabilito los botones en los extremos
+    const btnAnterior  = document.getElementById('btn-carta-anterior');
+    const btnSiguiente = document.getElementById('btn-carta-siguiente');
+    if (btnAnterior)  btnAnterior.disabled  = indice === 0;
+    if (btnSiguiente) btnSiguiente.disabled = indice === ORDEN_CATEGORIAS.length - 1;
+  }
+
+  // En móvil, al cambiar categoría también hago scroll al top del editor
+  const cambiarCategoriaOriginal = cambiarCategoria;
+  function cambiarCategoria(id, btn) {
+    cambiarCategoriaOriginal(id, btn);
+    actualizarNavMovil();
+    // Preservo el token en la URL al cambiar de carta
+    const params = new URLSearchParams(window.location.search);
+    const token  = params.get('token');
+    if (token && window.history.replaceState) {
+      const nuevaUrl = `${window.location.pathname}?token=${token}&carta=${id}`;
+      window.history.replaceState(null, '', nuevaUrl);
+    }
+  }
+
+  // Muestro el preview en móvil (scroll al panel derecho)
+  function verPreviewMovil() {
+    const preview = document.getElementById('panel-preview');
+    if (preview) {
+      preview.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // Cambio el botón momentáneamente para dar feedback
+      const btn = document.getElementById('btn-ver-carta');
+      if (btn) {
+        const orig = btn.innerHTML;
+        btn.innerHTML = '✓ ¡Listo!';
+        setTimeout(() => { btn.innerHTML = orig; }, 1500);
+      }
+    }
+  }
+
+  // Vuelvo al editor desde el preview en móvil
+  function volverEditorMovil() {
+    const editor = document.getElementById('panel-editor');
+    if (editor) {
+      editor.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  // Inicializo la nav móvil al cargar
+  document.addEventListener('DOMContentLoaded', function() {
+    actualizarNavMovil();
   });
   </script>
 
