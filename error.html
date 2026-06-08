@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="robots" content="noindex, nofollow"/>
+  <title>Algo salió mal | El Mundo de Manu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body style="min-height:100svh;display:flex;align-items:center;justify-content:center;padding:2rem;background:var(--c-bg);">
+
+  <div style="max-width:480px;width:100%;text-align:center;">
+
+    <!-- Ícono -->
+    <div style="width:72px;height:72px;border-radius:50%;background:rgba(229,85,85,0.12);border:2px solid rgba(229,85,85,0.3);display:flex;align-items:center;justify-content:center;margin:0 auto 2rem;">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#e55555" stroke-width="2.5">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M12 8v4m0 4h.01"/>
+      </svg>
+    </div>
+
+    <!-- Mensaje dinámico según el error -->
+    <div class="badge" style="margin-bottom:1.5rem;" id="badge-error">⚠️ Pago no completado</div>
+
+    <h1 style="font-family:var(--f-display);font-size:2rem;color:var(--t-primary);margin-bottom:0.75rem;" id="titulo-error">
+      Algo salió mal con tu pago
+    </h1>
+
+    <p style="color:var(--t-secondary);font-size:0.95rem;line-height:1.7;margin-bottom:2.5rem;" id="descripcion-error">
+      No te preocupes — no se realizó ningún cobro. Puedes intentarlo de nuevo
+      cuando quieras, o probar con otra pasarela de pago.
+    </p>
+
+    <!-- Opciones -->
+    <div style="display:flex;flex-direction:column;gap:0.75rem;margin-bottom:2rem;">
+      <a href="index.html" class="btn-primary" style="text-decoration:none;font-size:1rem;padding:1rem 2rem;">
+        Intentar de nuevo
+      </a>
+      <a href="mailto:tu@email.com" class="btn-secondary" style="text-decoration:none;font-size:0.875rem;">
+        Contactar soporte
+      </a>
+    </div>
+
+    <p style="font-size:0.75rem;color:var(--t-muted);">
+      ¿Ya pagaste y no recibiste el email? Escríbeme a
+      <a href="mailto:tu@email.com" style="color:var(--c-teal);">tu@email.com</a>
+      y te soluciono en minutos.
+    </p>
+  </div>
+
+  <script>
+    // Adapto el mensaje según el tipo de error que viene en la URL
+    const params = new URLSearchParams(window.location.search);
+    const razon  = params.get('razon') || '';
+
+    const mensajes = {
+      pago_fallido: {
+        badge:       '❌ Pago rechazado',
+        titulo:      'El pago fue rechazado',
+        descripcion: 'Tu banco o la pasarela rechazaron el pago. No se realizó ningún cobro. Puedes intentarlo con otra tarjeta o pasarela.',
+      },
+      pago_pendiente: {
+        badge:       '⏳ Pago pendiente',
+        titulo:      'Tu pago está en proceso',
+        descripcion: 'El pago quedó pendiente de confirmación. En cuanto se apruebe recibirás el email con tu acceso automáticamente. Esto puede tardar unos minutos.',
+      },
+      token_invalido: {
+        badge:       '🔒 Acceso no válido',
+        titulo:      'Este link ya no es válido',
+        descripcion: 'El link de acceso no es válido o expiró. Si compraste el pack, revisa tu email — ahí tienes tu link permanente. ¿No lo encuentras?',
+      },
+      sin_token: {
+        badge:       '🔒 Acceso requerido',
+        titulo:      'Necesitas comprar el pack primero',
+        descripcion: 'El personalizador de cartas es exclusivo para clientes. Adquiere el Pack de Cartas de Amor Premium y recibe tu acceso inmediato por email.',
+      },
+    };
+
+    if (mensajes[razon]) {
+      document.getElementById('badge-error').textContent        = mensajes[razon].badge;
+      document.getElementById('titulo-error').textContent       = mensajes[razon].titulo;
+      document.getElementById('descripcion-error').textContent  = mensajes[razon].descripcion;
+    }
+  </script>
+
+</body>
+</html>

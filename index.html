@@ -294,7 +294,7 @@
   <footer class="footer" role="contentinfo">
     <div class="footer-brand">El Mundo de <span>Manu</span></div>
     <p class="footer-text">
-      © 2026 Carlos Manuel Turizo Hernández · Todos los derechos reservados<br />
+      © 2025 Carlos Manuel Turizo Hernández · Todos los derechos reservados<br />
       <a href="mailto:tu@email.com" class="footer-link">Contacto</a>
     </p>
   </footer>
@@ -325,7 +325,10 @@
       <div style="display:flex;flex-direction:column;gap:0.75rem;" id="pasarelas-container">
 
         <button class="pasarela-btn" onclick="iniciarPago('mercadopago')" id="btn-mp">
-          <div class="pasarela-logo" style="background:#009EE3;color:#fff;">MP</div>
+          <!-- Logo Mercado Pago -->
+          <div class="pasarela-logo" style="background:#fff;padding:0;overflow:hidden;display:flex;align-items:center;justify-content:center;border:1.5px solid #e8f4fd;">
+            <img src="assets/img/logos/MercadoPago.png" alt="Mercado Pago" width="36" height="36" style="object-fit:contain;" />
+          </div>
           <div class="pasarela-info">
             <strong>Mercado Pago</strong>
             <span>Tarjeta, PSE, efectivo, cuotas</span>
@@ -336,7 +339,10 @@
         </button>
 
         <button class="pasarela-btn" onclick="iniciarPago('wompi')" id="btn-wompi">
-          <div class="pasarela-logo" style="background:#5B21D0;color:#fff;">W</div>
+          <!-- Logo Wompi -->
+          <div class="pasarela-logo" style="background:#A8E6A3;padding:0;overflow:hidden;display:flex;align-items:center;justify-content:center;">
+            <img src="assets/img/logos/Wompi.png" alt="Wompi" width="38" height="38" style="object-fit:contain;" />
+          </div>
           <div class="pasarela-info">
             <strong>Wompi</strong>
             <span>Tarjeta crédito/débito, Nequi, PSE</span>
@@ -347,7 +353,10 @@
         </button>
 
         <button class="pasarela-btn" onclick="iniciarPago('bold')" id="btn-bold">
-          <div class="pasarela-logo" style="background:#111;color:#fff;">B</div>
+          <!-- Logo Bold -->
+          <div class="pasarela-logo" style="background:#1a1060;padding:0;overflow:hidden;display:flex;align-items:center;justify-content:center;border-radius:10px;">
+            <img src="assets/img/logos/Bold.png" alt="Bold" width="40" height="40" style="object-fit:contain;" />
+          </div>
           <div class="pasarela-info">
             <strong>Bold</strong>
             <span>Tarjeta, transferencia, Nequi</span>

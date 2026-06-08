@@ -4,450 +4,1136 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
-  <title>Personaliza tu Carta | Pack de Cartas de Amor Premium</title>
+  <title>Crea tu Carta | Pack de Cartas de Amor Premium</title>
+
+  <!-- Mis fuentes: Cormorant para la carta, DM Sans para la UI -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet" />
+
+  <!-- html2canvas para capturar la carta como imagen y compartirla -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <style>
+    /* ═══════════════════════════════════════
+       MIS TOKENS DE DISEÑO
+       Paleta cálida y elegante — nada oscuro
+       ═══════════════════════════════════════ */
+    :root {
+      --bg:          #FAF7F2;       /* Fondo principal: crema cálido */
+      --bg-panel:    #FFFFFF;       /* Panel izquierdo: blanco puro */
+      --bg-carta:    #FFFDF8;       /* Hoja de carta: crema muy suave */
+      --accent:      #B8862A;       /* Dorado oscuro — sofisticado */
+      --accent-lite: #F0D48A;       /* Dorado claro para detalles */
+      --teal:        #2A7A6F;       /* Verde-teal para acentos secundarios */
+      --ink:         #1C1A17;       /* Tinta casi negra para texto */
+      --ink-2:       #6B6560;       /* Texto secundario */
+      --ink-3:       #B0A89E;       /* Placeholder y muted */
+      --border:      #E8E0D5;       /* Bordes sutiles */
+      --border-gold: rgba(184,134,42,0.25);
+      --shadow-sm:   0 2px 8px rgba(28,26,23,0.06);
+      --shadow-md:   0 8px 32px rgba(28,26,23,0.10);
+      --shadow-carta:0 16px 60px rgba(28,26,23,0.14), 0 4px 16px rgba(28,26,23,0.08);
+      --r-sm: 8px; --r-md: 14px; --r-lg: 20px;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --f-display: 'Cormorant Garamond', Georgia, serif;
+      --f-ui:      'DM Sans', system-ui, sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--f-ui);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100svh;
+      overflow-x: hidden;
+    }
+
+    /* ═══════════════════════════════════════
+       HEADER
+       ═══════════════════════════════════════ */
+    .header {
+      background: var(--bg-panel);
+      border-bottom: 1px solid var(--border);
+      padding: 0 1.5rem;
+      height: 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 50;
+      box-shadow: var(--shadow-sm);
+    }
+    .header-brand {
+      font-family: var(--f-display);
+      font-size: 1.1rem; font-weight: 500;
+      color: var(--ink);
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .header-brand span { color: var(--accent); }
+    .header-badge {
+      font-size: 0.68rem; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(184,134,42,0.1);
+      border: 1px solid var(--border-gold);
+      padding: 0.2rem 0.6rem;
+      border-radius: 99px;
+    }
+
+    /* ═══════════════════════════════════════
+       TABS DE CATEGORÍA
+       ═══════════════════════════════════════ */
+    .tabs-bar {
+      background: var(--bg-panel);
+      border-bottom: 1px solid var(--border);
+      padding: 0 1.5rem;
+      overflow-x: auto; scrollbar-width: none;
+      display: flex; gap: 0.25rem;
+      -webkit-overflow-scrolling: touch;
+    }
+    .tabs-bar::-webkit-scrollbar { display: none; }
+
+    .tab-btn {
+      display: flex; align-items: center; gap: 0.4rem;
+      padding: 0.8rem 1.1rem;
+      font-family: var(--f-ui); font-size: 0.82rem; font-weight: 500;
+      color: var(--ink-2); white-space: nowrap;
+      border: none; background: none; cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s ease;
+      position: relative; top: 1px; /* Encima del border-bottom del contenedor */
+    }
+    .tab-btn:hover { color: var(--accent); }
+    .tab-btn.activo {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* ═══════════════════════════════════════
+       LAYOUT PRINCIPAL
+       ═══════════════════════════════════════ */
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      min-height: calc(100svh - 109px);
+    }
+    @media (min-width: 900px) {
+      .layout { grid-template-columns: 340px 1fr; }
+    }
+
+    /* ═══════════════════════════════════════
+       PANEL IZQUIERDO — Editor
+       ═══════════════════════════════════════ */
+    .panel-editor {
+      background: var(--bg-panel);
+      border-right: 1px solid var(--border);
+      padding: 1.75rem 1.5rem;
+      overflow-y: auto;
+    }
+    @media (min-width: 900px) {
+      .panel-editor {
+        height: calc(100svh - 109px);
+        position: sticky; top: 109px;
+      }
+    }
+
+    .panel-title {
+      font-family: var(--f-display);
+      font-size: 1.4rem; font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 0.25rem;
+    }
+    .panel-sub {
+      font-size: 0.82rem; color: var(--ink-2);
+      margin-bottom: 1.5rem; line-height: 1.5;
+    }
+
+    /* Mis campos del formulario */
+    .field { margin-bottom: 1.2rem; }
+    .field-label {
+      display: block;
+      font-size: 0.72rem; font-weight: 600;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--ink-2); margin-bottom: 0.4rem;
+    }
+    .field-input, .field-textarea {
+      width: 100%;
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-sm);
+      padding: 0.65rem 0.85rem;
+      font-family: var(--f-ui); font-size: 0.9rem;
+      color: var(--ink); outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .field-input::placeholder, .field-textarea::placeholder { color: var(--ink-3); }
+    .field-input:focus, .field-textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(184,134,42,0.1);
+    }
+    .field-textarea {
+      resize: vertical; min-height: 180px;
+      line-height: 1.7; font-size: 0.88rem;
+    }
+    .field-hint {
+      font-size: 0.72rem; color: var(--ink-3);
+      margin-top: 0.3rem; display: flex; justify-content: space-between;
+    }
+
+    /* Selector de estilo de decoración */
+    .deco-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem;
+      margin-bottom: 1.2rem;
+    }
+    .deco-btn {
+      padding: 0.5rem 0.3rem;
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-sm);
+      background: var(--bg); cursor: pointer;
+      font-size: 0.75rem; color: var(--ink-2); font-family: var(--f-ui);
+      text-align: center; transition: all 0.2s ease;
+      display: flex; flex-direction: column; align-items: center; gap: 0.25rem;
+    }
+    .deco-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .deco-btn.activo {
+      border-color: var(--accent);
+      background: rgba(184,134,42,0.07);
+      color: var(--accent); font-weight: 600;
+    }
+    .deco-btn .deco-icon { font-size: 1.1rem; }
+
+    /* Tip de categoría */
+    .tip-box {
+      background: rgba(42,122,111,0.06);
+      border: 1px solid rgba(42,122,111,0.2);
+      border-radius: var(--r-sm);
+      padding: 0.85rem 1rem;
+      margin-top: 1rem;
+    }
+    .tip-title { font-size: 0.72rem; font-weight: 700; color: var(--teal); margin-bottom: 0.3rem; letter-spacing: 0.04em; }
+    .tip-text  { font-size: 0.78rem; color: var(--ink-2); line-height: 1.55; }
+
+    /* ═══════════════════════════════════════
+       PANEL DERECHO — Preview
+       ═══════════════════════════════════════ */
+    .panel-preview {
+      background: var(--bg);
+      padding: 2rem 1.5rem 3rem;
+      display: flex; flex-direction: column; align-items: center; gap: 1.5rem;
+      overflow-y: auto;
+    }
+    @media (min-width: 900px) {
+      .panel-preview { height: calc(100svh - 109px); overflow-y: auto; }
+    }
+
+    /* Mi hoja de carta — el producto que el cliente comparte */
+    .carta-sheet {
+      width: 100%; max-width: 580px;
+      background: var(--bg-carta);
+      border-radius: var(--r-lg);
+      box-shadow: var(--shadow-carta);
+      position: relative; overflow: hidden;
+      transition: all 0.3s var(--ease);
+    }
+
+    /* Mi borde decorativo superior — cambia según el estilo */
+    .carta-sheet::before {
+      content: '';
+      display: block; height: 5px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-lite), var(--teal));
+    }
+
+    .carta-inner { padding: 2.5rem 2.75rem 3rem; }
+    @media (max-width: 500px) { .carta-inner { padding: 1.75rem 1.5rem 2rem; } }
+
+    /* Mi cabecera de la carta */
+    .carta-header {
+      display: flex; align-items: center; gap: 0.5rem;
+      margin-bottom: 2rem;
+    }
+    .carta-header-line {
+      height: 1px; flex: 1;
+      background: linear-gradient(90deg, var(--accent-lite), transparent);
+    }
+    .carta-header-label {
+      font-family: var(--f-ui);
+      font-size: 0.65rem; font-weight: 600;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--accent); white-space: nowrap;
+    }
+
+    /* Mi título de la carta */
+    .carta-titulo {
+      font-family: var(--f-display);
+      font-size: 1.5rem; font-style: italic;
+      font-weight: 500; color: var(--ink);
+      margin-bottom: 1.25rem; line-height: 1.25;
+      min-height: 2.5rem;
+    }
+    .carta-titulo[data-placeholder]:empty::before {
+      content: attr(data-placeholder);
+      color: var(--ink-3);
+    }
+
+    /* Mi cuerpo de la carta — editable directamente */
+    .carta-cuerpo {
+      font-family: var(--f-display);
+      font-size: 1.05rem; line-height: 1.9;
+      color: var(--ink);
+      min-height: 200px;
+      outline: none;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .carta-cuerpo[data-placeholder]:empty::before {
+      content: attr(data-placeholder);
+      color: var(--ink-3); font-style: italic;
+      pointer-events: none;
+    }
+    .carta-cuerpo:focus { background: rgba(184,134,42,0.02); border-radius: 4px; }
+
+    /* Mi nombre resaltado */
+    .nombre-highlight {
+      color: var(--accent);
+      font-weight: 500;
+      border-bottom: 1px solid rgba(184,134,42,0.35);
+    }
+
+    /* Mi bloque de frase personal */
+    .carta-frase {
+      margin-top: 1.5rem;
+      padding: 0.75rem 1rem;
+      border-left: 2px solid var(--accent-lite);
+      font-family: var(--f-display);
+      font-size: 0.95rem; font-style: italic;
+      color: var(--ink-2); line-height: 1.65;
+    }
+
+    /* Mi firma */
+    .carta-firma {
+      margin-top: 2rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--border);
+      font-family: var(--f-display);
+      font-size: 0.95rem; font-style: italic;
+      color: var(--ink-2);
+      min-height: 2rem;
+    }
+    .carta-firma[data-placeholder]:empty::before {
+      content: attr(data-placeholder);
+      color: var(--ink-3);
+    }
+
+    /* Mi ornamento decorativo de la carta */
+    .carta-ornamento {
+      text-align: center;
+      font-size: 1.2rem; color: var(--accent-lite);
+      margin: 1.5rem 0 0.5rem;
+      letter-spacing: 0.3em;
+    }
+
+    /* ═══════════════════════════════════════
+       ESTILOS DE CARTA — los 3 temas visuales
+       ═══════════════════════════════════════ */
+    /* Clásico — el default */
+    .estilo-clasico .carta-sheet { border-radius: var(--r-lg); }
+
+    /* Romántico — esquinas redondeadas, borde dorado */
+    .estilo-romantico .carta-sheet {
+      border-radius: 2rem;
+      box-shadow: var(--shadow-carta), 0 0 0 1px var(--border-gold);
+    }
+    .estilo-romantico .carta-sheet::before {
+      background: linear-gradient(90deg, #E8B4C8, var(--accent-lite), #E8B4C8);
+    }
+
+    /* Minimalista — líneas limpias */
+    .estilo-minimal .carta-sheet { border-radius: var(--r-sm); }
+    .estilo-minimal .carta-sheet::before { height: 2px; background: var(--ink); }
+    .estilo-minimal .carta-titulo { font-style: normal; font-size: 1.3rem; }
+
+    /* ═══════════════════════════════════════
+       BOTONES DE ACCIÓN
+       ═══════════════════════════════════════ */
+    .acciones {
+      display: flex; gap: 0.75rem;
+      flex-wrap: wrap; width: 100%; max-width: 580px;
+    }
+
+    .btn-accion {
+      flex: 1; min-width: 130px;
+      display: flex; align-items: center; justify-content: center; gap: 0.4rem;
+      padding: 0.8rem 1.2rem;
+      border-radius: var(--r-md); border: none; cursor: pointer;
+      font-family: var(--f-ui); font-size: 0.88rem; font-weight: 600;
+      transition: all 0.2s var(--ease);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn-copiar {
+      background: var(--accent); color: #fff;
+      box-shadow: 0 4px 16px rgba(184,134,42,0.3);
+    }
+    .btn-copiar:hover { background: #9a7020; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(184,134,42,0.35); }
+
+    .btn-imagen {
+      background: var(--teal); color: #fff;
+      box-shadow: 0 4px 16px rgba(42,122,111,0.25);
+    }
+    .btn-imagen:hover { background: #1f6059; transform: translateY(-2px); }
+
+    .btn-compartir {
+      background: var(--bg-panel); color: var(--ink);
+      border: 1.5px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      flex: 0 0 auto; min-width: auto;
+      padding: 0.8rem;
+    }
+    .btn-compartir:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+
+    /* Mi grid de compartir en redes */
+    .share-grid {
+      display: none; /* Se muestra con JS */
+      grid-template-columns: repeat(4, 1fr); gap: 0.5rem;
+      width: 100%; max-width: 580px;
+      background: var(--bg-panel);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 1rem;
+    }
+    .share-grid.visible { display: grid; }
+
+    .share-btn {
+      display: flex; flex-direction: column; align-items: center; gap: 0.3rem;
+      padding: 0.65rem 0.5rem;
+      border-radius: var(--r-sm); border: 1.5px solid var(--border);
+      background: var(--bg); cursor: pointer;
+      font-family: var(--f-ui); font-size: 0.72rem; font-weight: 500;
+      color: var(--ink-2); transition: all 0.2s ease;
+    }
+    .share-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(184,134,42,0.05); transform: translateY(-2px); }
+    .share-btn svg, .share-btn .share-icon { font-size: 1.3rem; }
+
+    /* Mi nota de inspiración */
+    .inspiracion-box {
+      width: 100%; max-width: 580px;
+      background: var(--bg-panel);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 1.1rem 1.25rem;
+    }
+    .inspiracion-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 0;
+      cursor: pointer;
+    }
+    .inspiracion-titulo {
+      font-size: 0.82rem; font-weight: 600;
+      color: var(--ink-2);
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+    .inspiracion-toggle {
+      font-size: 0.75rem; color: var(--accent);
+      font-weight: 600; background: none; border: none; cursor: pointer;
+    }
+    .inspiracion-texto {
+      display: none;
+      font-family: var(--f-display);
+      font-size: 0.9rem; font-style: italic;
+      color: var(--ink-2); line-height: 1.8;
+      margin-top: 0.75rem; padding-top: 0.75rem;
+      border-top: 1px solid var(--border);
+    }
+    .inspiracion-texto.visible { display: block; }
+    .btn-usar-inspiracion {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      margin-top: 0.75rem;
+      font-size: 0.78rem; font-weight: 600;
+      color: var(--accent); background: none; border: none; cursor: pointer;
+      padding: 0.3rem 0;
+      transition: opacity 0.2s ease;
+    }
+    .btn-usar-inspiracion:hover { opacity: 0.7; }
+
+    /* ═══════════════════════════════════════
+       TOAST
+       ═══════════════════════════════════════ */
+    .toast {
+      position: fixed; bottom: 1.5rem; left: 50%; z-index: 200;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--ink); color: #fff;
+      border-radius: 99px;
+      padding: 0.7rem 1.5rem;
+      font-size: 0.85rem; font-weight: 500;
+      box-shadow: 0 8px 32px rgba(28,26,23,0.25);
+      opacity: 0; pointer-events: none;
+      transition: all 0.4s var(--ease);
+      white-space: nowrap;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+    .toast.exito { background: var(--teal); }
+    .toast.error { background: #B83232; }
+
+    /* ═══════════════════════════════════════
+       SPINNER
+       ═══════════════════════════════════════ */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner {
+      width: 16px; height: 16px; border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      animation: spin 0.7s linear infinite;
+      display: inline-block; flex-shrink: 0;
+    }
+
+    /* ═══════════════════════════════════════
+       RESPONSIVE MÓVIL
+       ═══════════════════════════════════════ */
+    @media (max-width: 899px) {
+      .panel-editor { border-right: none; border-bottom: 1px solid var(--border); }
+      .acciones { flex-direction: column; }
+      .btn-accion { min-width: unset; }
+    }
+
+    /* Mi hoja especial para impresión/captura — limpia, sin sombras */
+    @media print {
+      body { background: white; }
+      .header, .tabs-bar, .panel-editor, .acciones, .share-grid, .inspiracion-box, .toast { display: none !important; }
+      .panel-preview { padding: 0; background: white; }
+      .carta-sheet { box-shadow: none; border-radius: 0; max-width: 100%; }
+    }
+  </style>
+
+  <script>
+  /*
+    Mi verificación de acceso — lo primero que ejecuto al cargar el personalizador.
+    Si no hay token válido, el cliente no puede ver el contenido.
+    Consulto al backend que verifica en Supabase.
+  */
+  (async function verificarAcceso() {
+    const MI_BACKEND_URL = (() => {
+      const esLocal = ['localhost','127.0.0.1',''].includes(window.location.hostname);
+      return esLocal ? 'http://localhost:3000' : 'https://pack-cartas-amor.onrender.com';
+    })();
+
+    const params = new URLSearchParams(window.location.search);
+    const token  = params.get('token');
+
+    // Si no hay token en la URL, redirige a la página de error
+    if (!token) {
+      window.location.replace('error.html?razon=sin_token');
+      return;
+    }
+
+    // Guardo el token en sessionStorage para no perderlo si el cliente navega
+    sessionStorage.setItem('acceso_token', token);
+
+    try {
+      // Consulto al backend — él verifica en Supabase
+      const res  = await fetch(`${MI_BACKEND_URL}/api/verificar-token?token=${encodeURIComponent(token)}`);
+      const data = await res.json();
+
+      if (!data.ok) {
+        // Token inválido o expirado → redirijo a error
+        window.location.replace('error.html?razon=token_invalido');
+        return;
+      }
+
+      // ✅ Acceso concedido — personalizo el saludo si tengo el nombre
+      if (data.nombre) {
+        const saludo = document.getElementById('saludo-cliente');
+        if (saludo) saludo.textContent = `Hola, ${data.nombre.split(' ')[0]} 👋`;
+      }
+
+    } catch (err) {
+      // Si el backend no responde (Render dormido, etc.), dejo pasar
+      // para no bloquear al cliente por un error de red
+      console.warn('No pude verificar el token — dejando pasar:', err.message);
+    }
+  })();
+  </script>
 </head>
 <body>
-<div class="pers-layout">
 
-  <!-- ╔══════════════════════════════════════════════════════╗
-       ║  HEADER DEL PERSONALIZADOR                        ║
-       ╚══════════════════════════════════════════════════════╝ -->
-  <header class="pers-header">
-    <div class="pers-header-brand">El Mundo de <span>Manu</span> · <span style="color:var(--t-secondary);font-family:var(--f-body);font-size:0.85rem;font-weight:400;">Personalizador</span></div>
-
-    <!-- Mi selector de cartas como tabs scrollables horizontalmente -->
-    <nav class="carta-tabs" role="tablist" aria-label="Seleccionar carta">
-      <button class="carta-tab activo" role="tab" aria-selected="true"  data-carta="romantica"       onclick="cambiarCarta('romantica',this)">💌 Romántica</button>
-      <button class="carta-tab"         role="tab" aria-selected="false" data-carta="intensa"         onclick="cambiarCarta('intensa',this)">🔥 Intensa</button>
-      <button class="carta-tab"         role="tab" aria-selected="false" data-carta="nostalgica"      onclick="cambiarCarta('nostalgica',this)">🌧️ Nostálgica</button>
-      <button class="carta-tab"         role="tab" aria-selected="false" data-carta="reconciliacion"  onclick="cambiarCarta('reconciliacion',this)">🕊️ Reconciliación</button>
-      <button class="carta-tab"         role="tab" aria-selected="false" data-carta="aniversario"     onclick="cambiarCarta('aniversario',this)">🥂 Aniversario</button>
-      <button class="carta-tab"         role="tab" aria-selected="false" data-carta="cumpleanos"      onclick="cambiarCarta('cumpleanos',this)">🎂 Cumpleaños</button>
-    </nav>
+  <!-- ════════════════════════════════════
+       HEADER
+       ════════════════════════════════════ -->
+  <header class="header">
+    <div class="header-brand">
+      El Mundo de <span>Manu</span>
+      <span class="header-badge">✦ Personalizador</span>
+    </div>
+    <a href="index.html" style="font-size:0.8rem;color:var(--ink-2);text-decoration:none;display:flex;align-items:center;gap:0.3rem;">
+      ← Volver
+    </a>
   </header>
 
+  <!-- ════════════════════════════════════
+       TABS DE CATEGORÍA
+       ════════════════════════════════════ -->
+  <nav class="tabs-bar" role="tablist" aria-label="Estilo de carta">
+    <button class="tab-btn activo" data-cat="romantica"      onclick="cambiarCategoria('romantica',this)"      role="tab">💌 Romántica</button>
+    <button class="tab-btn"        data-cat="intensa"        onclick="cambiarCategoria('intensa',this)"        role="tab">🔥 Intensa</button>
+    <button class="tab-btn"        data-cat="nostalgica"     onclick="cambiarCategoria('nostalgica',this)"     role="tab">🌧️ Nostálgica</button>
+    <button class="tab-btn"        data-cat="reconciliacion" onclick="cambiarCategoria('reconciliacion',this)" role="tab">🕊️ Reconciliación</button>
+    <button class="tab-btn"        data-cat="aniversario"    onclick="cambiarCategoria('aniversario',this)"    role="tab">🥂 Aniversario</button>
+    <button class="tab-btn"        data-cat="cumpleanos"     onclick="cambiarCategoria('cumpleanos',this)"     role="tab">🎂 Cumpleaños</button>
+  </nav>
 
-  <!-- ╔══════════════════════════════════════════════════════╗
-       ║  CUERPO: PANEL IZQUIERDO + PREVIEW DERECHO        ║
-       ╚══════════════════════════════════════════════════════╝ -->
-  <main class="pers-body">
+  <!-- ════════════════════════════════════
+       LAYOUT
+       ════════════════════════════════════ -->
+  <div class="layout" id="layout-wrapper">
 
-    <!-- Panel de personalización -->
-    <aside class="pers-panel" aria-label="Opciones de personalización">
-      <h2 class="pers-panel-title" id="panel-titulo">Carta Romántica</h2>
+    <!-- Panel editor -->
+    <aside class="panel-editor" id="panel-editor">
+      <h2 class="panel-title" id="panel-titulo">Carta Romántica</h2>
+      <p class="panel-sub">Escribe lo que sientes. La carta es completamente tuya.</p>
 
-      <div class="form-group">
-        <label class="form-label" for="input-nombre">Nombre de quien recibe 💌</label>
-        <input
-          class="form-input"
-          type="text"
-          id="input-nombre"
-          placeholder="Ej: María, Sebastián..."
-          maxlength="40"
-          autocomplete="off"
-          oninput="actualizarPreview()"
-        />
+      <!-- Nombre -->
+      <div class="field">
+        <label class="field-label" for="inp-nombre">¿A quién va dirigida?</label>
+        <input class="field-input" type="text" id="inp-nombre"
+          placeholder="Ej: María, mi amor, Sebas..."
+          maxlength="50" autocomplete="off"
+          oninput="actualizarCarta()" />
       </div>
 
-      <div class="form-group">
-        <label class="form-label" for="input-firma">Tu firma (opcional)</label>
-        <input
-          class="form-input"
-          type="text"
-          id="input-firma"
-          placeholder="Ej: Con amor, Juan · Tu amor secreto..."
-          maxlength="60"
-          autocomplete="off"
-          oninput="actualizarPreview()"
-        />
+      <!-- Título -->
+      <div class="field">
+        <label class="field-label" for="inp-titulo">Título de tu carta <span style="font-weight:400;text-transform:none;font-size:0.7rem;">(opcional)</span></label>
+        <input class="field-input" type="text" id="inp-titulo"
+          placeholder='Ej: "Lo que nunca te he dicho"'
+          maxlength="80" autocomplete="off"
+          oninput="actualizarCarta()" />
       </div>
 
-      <div class="form-group">
-        <label class="form-label" for="input-extra">Frase o detalle personal (opcional)</label>
-        <textarea
-          class="form-textarea"
-          id="input-extra"
-          placeholder="Escribe aquí un recuerdo, un detalle especial o una frase tuya que quieras añadir al final de la carta..."
-          maxlength="300"
-          oninput="actualizarPreview()"
-        ></textarea>
-        <p style="font-size:0.72rem;color:var(--t-muted);margin-top:0.4rem;text-align:right;">
-          <span id="char-count">0</span>/300 caracteres
-        </p>
+      <!-- Cuerpo -->
+      <div class="field">
+        <label class="field-label" for="inp-cuerpo">Tu mensaje ✍️</label>
+        <textarea class="field-textarea" id="inp-cuerpo"
+          placeholder="Escribe aquí lo que sientes con tus propias palabras. No hay límite — esta carta es completamente tuya..."
+          oninput="actualizarCarta(); contarChars()"></textarea>
+        <div class="field-hint">
+          <span>Escribe desde el corazón</span>
+          <span id="char-count">0 caracteres</span>
+        </div>
       </div>
 
-      <!-- Separador -->
-      <hr class="divider" style="margin:1.5rem 0;" />
+      <!-- Firma -->
+      <div class="field">
+        <label class="field-label" for="inp-firma">Tu firma</label>
+        <input class="field-input" type="text" id="inp-firma"
+          placeholder="Ej: Con todo mi amor, Juan"
+          maxlength="80" autocomplete="off"
+          oninput="actualizarCarta()" />
+      </div>
 
-      <!-- Tips de uso -->
-      <div style="background:var(--c-gold-dim);border:1px solid var(--c-border-gold);border-radius:var(--r-md);padding:1rem 1.2rem;">
-        <p style="font-size:0.78rem;font-weight:700;color:var(--c-gold);margin-bottom:0.5rem;letter-spacing:0.04em;">💡 Tip de uso</p>
-        <p style="font-size:0.8rem;color:var(--t-secondary);line-height:1.6;" id="tip-carta">
-          Esta carta es perfecta para enviarla un martes sin razón. El detalle inesperado siempre impacta más que el esperado.
-        </p>
+      <!-- Estilo de decoración -->
+      <div class="field">
+        <label class="field-label">Estilo de la carta</label>
+        <div class="deco-grid">
+          <button class="deco-btn activo" data-estilo="clasico" onclick="cambiarEstilo('clasico',this)">
+            <span class="deco-icon">📜</span>Clásico
+          </button>
+          <button class="deco-btn" data-estilo="romantico" onclick="cambiarEstilo('romantico',this)">
+            <span class="deco-icon">🌹</span>Romántico
+          </button>
+          <button class="deco-btn" data-estilo="minimal" onclick="cambiarEstilo('minimal',this)">
+            <span class="deco-icon">◻️</span>Minimal
+          </button>
+        </div>
+      </div>
+
+      <!-- Tip de categoría -->
+      <div class="tip-box">
+        <p class="tip-title">💡 Tip para esta categoría</p>
+        <p class="tip-text" id="tip-texto">Un mensaje inesperado en un día sin razón especial siempre impacta más que el esperado.</p>
       </div>
     </aside>
 
+    <!-- Panel preview -->
+    <main class="panel-preview" id="panel-preview" role="main">
 
-    <!-- Panel de preview -->
-    <section class="pers-preview" aria-label="Vista previa de la carta" aria-live="polite">
+      <!-- Mi hoja de carta — la que el cliente ve y comparte -->
+      <div class="carta-sheet estilo-clasico" id="carta-sheet">
+        <div class="carta-inner" id="carta-capture">
 
-      <div class="carta-sheet" id="carta-sheet" role="article">
-        <div class="carta-sheet-label">
-          <span>✦</span>
-          <span id="sheet-categoria">Carta Romántica · El Mundo de Manu</span>
-        </div>
+          <div class="carta-header">
+            <div class="carta-header-line"></div>
+            <div class="carta-header-label" id="sheet-label">✦ Carta Romántica · El Mundo de Manu</div>
+            <div class="carta-header-line" style="background:linear-gradient(270deg, var(--accent-lite), transparent);"></div>
+          </div>
 
-        <h3 class="carta-sheet-titulo" id="sheet-titulo">"Lo ordinario contigo es extraordinario"</h3>
+          <div class="carta-titulo"
+            id="sheet-titulo"
+            data-placeholder='"Escribe aquí el título de tu carta..."'>
+          </div>
 
-        <div class="carta-sheet-body" id="sheet-body">Cargando carta...</div>
+          <div class="carta-cuerpo"
+            id="sheet-cuerpo"
+            contenteditable="true"
+            spellcheck="true"
+            data-placeholder="Tu mensaje aparecerá aquí mientras escribes...
+&#10;
+Comienza escribiendo en el panel de la izquierda o directamente aquí.">
+          </div>
 
-        <!-- Mi bloque de detalle personal — lo muestro solo si el usuario escribió algo -->
-        <div id="sheet-extra-container" style="display:none;margin-top:1.5rem;padding-top:1rem;border-top:1px solid rgba(0,0,0,0.08);">
-          <p style="font-size:0.85rem;font-style:italic;color:#555;font-family:var(--f-display);" id="sheet-extra"></p>
-        </div>
+          <div class="carta-ornamento" id="sheet-ornamento" aria-hidden="true">· · ·</div>
 
-        <div class="carta-sheet-firma">
-          <span id="sheet-firma">Con todo lo que soy,</span>
+          <div class="carta-firma"
+            id="sheet-firma"
+            data-placeholder="Tu firma aquí">
+          </div>
+
         </div>
       </div>
 
       <!-- Mis botones de acción -->
-      <div class="pers-actions">
-        <button class="btn-primary" onclick="copiarCarta()" id="btn-copiar" title="Copiar texto para WhatsApp o correo">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
-          </svg>
+      <div class="acciones">
+        <button class="btn-accion btn-copiar" onclick="copiarCarta()" id="btn-copiar">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
           Copiar carta
         </button>
-        <button class="btn-secondary" onclick="descargarPDF()" id="btn-pdf" title="Descargar PDF con diseño premium">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 10v6m0 0l-3-3m3 3l3-3"/><path d="M3 15v4a2 2 0 002 2h14a2 2 0 002-2v-4"/>
-          </svg>
-          Descargar PDF
+        <button class="btn-accion btn-imagen" onclick="descargarImagen()" id="btn-imagen">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 10v6m0 0l-3-3m3 3l3-3"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+          Descargar imagen
         </button>
-        <button class="btn-ghost" onclick="compartirWA()" title="Compartir directo por WhatsApp" style="flex-shrink:0;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.098.543 4.073 1.497 5.788L0 24l6.356-1.67A11.955 11.955 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.899 0-3.68-.51-5.21-1.404l-.374-.222-3.875 1.018 1.036-3.78-.242-.389A9.955 9.955 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+        <button class="btn-accion btn-compartir" onclick="toggleShareGrid()" title="Compartir en redes">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/></svg>
         </button>
       </div>
 
-      <p style="font-size:0.72rem;color:var(--t-muted);margin-top:1rem;text-align:center;">
-        💡 El PDF incluye diseño editorial premium listo para imprimir o enviar
-      </p>
-    </section>
+      <!-- Mi grid de compartir en redes sociales -->
+      <div class="share-grid" id="share-grid">
+        <button class="share-btn" onclick="compartirWhatsApp()">
+          <span class="share-icon">📱</span>WhatsApp
+        </button>
+        <button class="share-btn" onclick="compartirTelegram()">
+          <span class="share-icon">✈️</span>Telegram
+        </button>
+        <button class="share-btn" onclick="compartirEmail()">
+          <span class="share-icon">📧</span>Email
+        </button>
+        <button class="share-btn" onclick="compartirNativo()">
+          <span class="share-icon">⬆️</span>Más...
+        </button>
+      </div>
 
-  </main>
-</div>
+      <!-- Mi caja de inspiración (carta de ejemplo plegada) -->
+      <div class="inspiracion-box" id="inspiracion-box">
+        <div class="inspiracion-header" onclick="toggleInspiracion()">
+          <span class="inspiracion-titulo">
+            ✨ ¿Necesitas inspiración? Ver carta de ejemplo
+          </span>
+          <button class="inspiracion-toggle" id="btn-toggle-insp">Ver</button>
+        </div>
+        <div class="inspiracion-texto" id="inspiracion-texto">
+          <p id="insp-contenido"></p>
+          <button class="btn-usar-inspiracion" onclick="usarInspiracion()">
+            ↑ Usar como base y personalizar
+          </button>
+        </div>
+      </div>
 
-<!-- Mi toast de notificaciones -->
-<div class="toast" id="toast" role="alert" aria-live="polite"></div>
+    </main>
+  </div>
 
-<script>
-/*
-  Mi lógica completa del personalizador de cartas.
-  Toda la data de las cartas vive aquí en el objeto CARTAS.
-  El preview se actualiza en tiempo real con cada keypress.
-*/
+  <!-- Toast de notificaciones -->
+  <div class="toast" id="toast" role="alert" aria-live="polite"></div>
 
-// ─────────────────────────────────────────────────────────────
-// MI BASE DE DATOS DE CARTAS — el contenido real del producto
-// ─────────────────────────────────────────────────────────────
-const CARTAS = {
-  romantica: {
-    nombre:    'Romántica',
-    icono:     '💌',
-    titulo:    '"Lo ordinario contigo es extraordinario"',
-    categoria: 'Carta Romántica · El Mundo de Manu',
-    tip:       'Esta carta es perfecta para enviarla un martes sin razón. El detalle inesperado siempre impacta más.',
-    firma_defecto: 'Tuyo/a, siempre.',
-    cuerpo: `[NOMBRE],
 
-Hay personas que pasan por tu vida dejando apenas una huella en la arena — y luego estás tú, que llevas tiempo construyendo algo diferente en mí. No sé exactamente cuándo pasó. Fue gradual, como la luz del amanecer que no ves llegar pero que de repente lo ilumina todo.
+  <script>
+  /*
+    Mi lógica completa del personalizador.
+    Filosofía: el cliente escribe con total libertad.
+    Las cartas de ejemplo son solo inspiración opcional.
+  */
 
-Me gusta observarte cuando no te das cuenta. La forma en que frunces el ceño cuando piensas profundo, cómo te ríes antes de terminar el chiste porque ya no aguantas, el ruido que haces al tomar el primer café de la mañana. Son detalles absurdamente pequeños que, viniendo de ti, me parecen los más interesantes del mundo.
+  // ════════════════════════════════════
+  // MIS DATOS DE CATEGORÍAS
+  // ════════════════════════════════════
+  const CATEGORIAS = {
+    romantica: {
+      label:      '✦ Carta Romántica · El Mundo de Manu',
+      titulo:     'Encabezado: El Mundo de Manu',
+      nombre:     'Romántica',
+      tip:        'Un mensaje sin razón especial impacta más. Envíala un martes cualquiera.',
+      ornamento:  '· · ·',
+      inspiracion: `[Nombre],
 
-No te escribo esto porque sea una fecha especial. Te escribo porque hoy me desperté pensando en ti antes de tener los ojos abiertos del todo, y me pareció que eso merecía ser dicho en voz alta.
+Hay personas que pasan por tu vida dejando apenas una huella en la arena — y luego estás tú, que llevas tiempo construyendo algo diferente en mí.
 
-Contigo, lo ordinario se vuelve extraordinario. Y eso, [NOMBRE], es exactamente el tipo de amor que siempre quise tener.`
-  },
-  intensa: {
-    nombre:    'Intensa',
-    icono:     '🔥',
-    titulo:    '"Lo que no cabe en palabras"',
-    categoria: 'Carta Intensa · El Mundo de Manu',
-    tip:       'Perfecta para una noche especial o para decirle a tu pareja todo lo que no sabes cómo expresar cara a cara.',
-    firma_defecto: 'Con todo lo que soy,',
-    cuerpo: `[NOMBRE],
+Me gusta observarte cuando no te das cuenta. La forma en que frunces el ceño cuando piensas profundo, cómo te ríes antes de terminar el chiste porque ya no aguantas.
 
-Hay cosas que no sé cómo decirte mirándote a los ojos — no porque me dé miedo, sino porque siento que las palabras se quedan cortas. Pero hoy lo intento.
+No te escribo esto porque sea una fecha especial. Te escribo porque hoy me desperté pensando en ti y me pareció que eso merecía ser dicho en voz alta.
 
-Lo que siento por ti no es lo que me enseñaron que era el amor. No es tranquilo ni predecible. Es urgente. Es esa sensación de que el tiempo que no estoy contigo es tiempo que me falta, no tiempo que pasa. Es querer estar en la misma habitación que tú aunque los dos estemos en silencio absoluto, porque tu presencia es suficiente — es más que suficiente.
+Contigo, lo ordinario se vuelve extraordinario.`
+    },
+    intensa: {
+      label:      '✦ Carta Intensa · El Mundo de Manu',
+      nombre:     'Intensa',
+      tip:        'No guardes nada. Esta carta es para decir lo que nunca encuentras cómo decir cara a cara.',
+      ornamento:  '~ ~ ~',
+      inspiracion: `[Nombre],
 
-Me has movido cosas adentro que creía que ya no se movían. Me has hecho querer ser mejor — no para impresionarte, sino porque tú te mereces a alguien que da todo, y yo quiero ser esa persona.
+Lo que siento por ti no es lo que me enseñaron que era el amor. No es tranquilo ni predecible. Es urgente.
 
-Te deseo, [NOMBRE]. No solo como suena esa palabra a primera vista — te deseo en todos los sentidos. Y lo que más me asusta y me emociona al mismo tiempo es que creo que apenas estamos empezando.`
-  },
-  nostalgica: {
-    nombre:    'Nostálgica',
-    icono:     '🌧️',
-    titulo:    '"La distancia que no borra nada"',
-    categoria: 'Carta Nostálgica · El Mundo de Manu',
-    tip:       'Ideal para amor a distancia. Envíala cuando quieras que esa persona sepa que sigues pensando en ella.',
-    firma_defecto: 'Con todo el espacio entre nosotros, y nada de espacio en mi corazón.',
-    cuerpo: `[NOMBRE],
+Me has movido cosas adentro que creía que ya no se movían. Me has hecho querer ser mejor — no para impresionarte, sino porque tú te mereces a alguien que da todo.
+
+Y lo que más me asusta y me emociona al mismo tiempo es que creo que apenas estamos empezando.`
+    },
+    nostalgica: {
+      label:      '✦ Carta Nostálgica · El Mundo de Manu',
+      nombre:     'Nostálgica',
+      tip:        'Evoca un recuerdo específico compartido. Eso hace la diferencia entre una carta genérica y una que guarda para siempre.',
+      ornamento:  '· · ·',
+      inspiracion: `[Nombre],
 
 Te escribo desde aquí, que últimamente se siente demasiado lejos de donde estás tú.
 
-La distancia tiene una crueldad muy particular: no borra nada. No hace que los recuerdos se difuminen ni que el corazón se acostumbre. Al contrario — los detalles se vuelven más nítidos. Me acuerdo de tu voz con una precisión casi dolorosa. Del olor de tu ropa. De cómo se sentía estar en el mismo espacio que tú sin necesitar decir nada.
+La distancia tiene una crueldad muy particular: no borra nada. Me acuerdo de tu voz con una precisión casi dolorosa.
 
-Hay momentos del día que siguen siendo tuyos aunque no estés: la hora de dormir, cuando el silencio se vuelve muy ruidoso. Las tardes cuando pasa algo gracioso y mi primer instinto sigue siendo contártelo a ti. Los domingos, que siempre supimos hacer bien juntos.
+Hay momentos del día que siguen siendo tuyos aunque no estés. No te cuento esto para entristecerte — te lo cuento porque quiero que sepas que la distancia no ha cambiado nada de lo importante.`
+    },
+    reconciliacion: {
+      label:      '✦ Carta de Reconciliación · El Mundo de Manu',
+      nombre:     'Reconciliación',
+      tip:        'No la envíes en el momento de la pelea. Espera a estar calmado/a. El momento correcto lo es todo.',
+      ornamento:  '· · ·',
+      inspiracion: `[Nombre],
 
-No te cuento esto para entristecerte. Te lo cuento porque quiero que sepas que la distancia no ha cambiado nada de lo importante. Sigues siendo la persona que viene primero a mi mente, y la última en la que pienso antes de cerrar los ojos.
+He pasado este tiempo pensando de verdad, con honestidad, sobre lo que pasó y sobre lo que tú mereces de mi parte.
 
-Vuelve pronto. O déjame ir. Pero no me pidas que sienta menos — eso ya no puedo hacerlo.`
-  },
-  reconciliacion: {
-    nombre:    'Reconciliación',
-    icono:     '🕊️',
-    titulo:    '"Quiero hacer las cosas bien"',
-    categoria: 'Carta de Reconciliación · El Mundo de Manu',
-    tip:       'No la envíes en el momento de la pelea. Espera a que los dos estén calmados. El momento correcto lo es todo.',
-    firma_defecto: 'Lo siento de verdad.',
-    cuerpo: `[NOMBRE],
+Me equivoqué. No te traté con el cuidado que merecías. Y eso me pesa.
 
-He pasado este tiempo pensando. No buscando excusas — eso ya lo hice y me di cuenta de que no me llevaba a ningún lado. Pensando de verdad, con honestidad, sobre lo que pasó y sobre lo que tú mereces de mi parte.
+No te pido que lo olvides. Solo te pido la oportunidad de demostrarte con hechos que aprendo. Si me la das, no la voy a desperdiciar.`
+    },
+    aniversario: {
+      label:      '✦ Carta de Aniversario · El Mundo de Manu',
+      nombre:     'Aniversario',
+      tip:        'Nombra un momento específico que solo ustedes dos conocen. Eso convierte una carta bonita en una carta inolvidable.',
+      ornamento:  '✦ · ✦',
+      inspiracion: `[Nombre],
 
-Me equivoqué. No de la manera vaga en que la gente pide perdón para cerrar el tema — me equivoqué en algo concreto: no te traté con el cuidado que merecías en ese momento. Y eso me pesa.
+Si pudiera mostrarte lo que veo cuando pienso en nosotros, no te mostraría una sola imagen. Te mostraría una película entera — con risas, silencios, capítulos difíciles y todo ese tiempo ordinario en el que simplemente existimos juntos.
 
-Lo que más me cuesta no es el orgullo. Lo que más me cuesta es saber que te hice sentir algo que nunca debí hacerte sentir. Y que probablemente mientras yo estaba en mi cabeza justificando mis acciones, tú estabas cargando algo que yo puse ahí.
+Gracias por quedarte cuando era fácil irse. Gracias por elegirme cada día.
 
-No te pido que lo olvides de inmediato. No te pido que finjas que no pasó. Solo te pido una cosa: la oportunidad de demostrarte con hechos, no con palabras, que aprendo. Que lo que tenemos me importa lo suficiente como para hacer el trabajo de crecer.
-
-Si me la das, no la voy a desperdiciar.`
-  },
-  aniversario: {
-    nombre:    'Aniversario',
-    icono:     '🥂',
-    titulo:    '"Todo lo que hemos construido"',
-    categoria: 'Carta de Aniversario · El Mundo de Manu',
-    tip:       'Personaliza el tiempo que llevan juntos reemplazando el espacio correspondiente. Ese dato lo hace completamente tuya.',
-    firma_defecto: 'Por todo lo que viene,',
-    cuerpo: `[NOMBRE],
-
-Si pudiera mostrarte lo que veo cuando pienso en nosotros, no te mostraría una sola imagen. Te mostraría una película entera — con sus escenas de risa hasta llorar, sus momentos de silencio incómodo que supimos atravesar, sus capítulos difíciles, y todo ese tiempo ordinario y perfecto en el que simplemente existimos juntos sin necesitar que fuera nada más que eso.
-
-Hoy celebramos el tiempo que llevamos juntos. Y lo que más me sorprende no es cuánto tiempo ha pasado — es todo lo que hemos construido en él. Una forma de hablarnos que es solo nuestra. Bromas internas que no necesitan explicación. La confianza de saber que si algo se rompe, lo reparamos juntos.
-
-Eso no se improvisa, [NOMBRE]. Eso se construye. Y tú has sido un constructor/a extraordinario/a.
-
-Gracias por quedarte cuando era fácil irse. Gracias por elegirme no una vez, sino cada día. Y gracias por hacerme sentir que este camino, contigo al lado, vale absolutamente cada paso.`
-  },
-  cumpleanos: {
-    nombre:    'Cumpleaños',
-    icono:     '🎂',
-    titulo:    '"El día que llegaste al mundo"',
-    categoria: 'Carta de Cumpleaños · El Mundo de Manu',
-    tip:       'Envíala en la mañana, antes de los mensajes del grupo. Ser el/la primero/a en escribir algo de verdad marca la diferencia.',
-    firma_defecto: 'Con amor, siempre.',
-    cuerpo: `[NOMBRE],
+Por todo lo que viene.`
+    },
+    cumpleanos: {
+      label:      '✦ Carta de Cumpleaños · El Mundo de Manu',
+      nombre:     'Cumpleaños',
+      tip:        'Envíala en la madrugada o justo al despertar. Ser el/la primero/a en escribir algo real marca la diferencia.',
+      ornamento:  '🎂 · 🎂',
+      inspiracion: `[Nombre],
 
 Hoy es tu día, y quiero empezarlo diciéndote algo que no siempre digo con suficiente claridad: qué afortunado/a soy de que existas.
 
-No solo porque estés en mi vida — eso ya sería suficiente — sino porque eres el tipo de persona que hace que el mundo sea un lugar más interesante para todos los que te conocen. Tienes esa capacidad rara de entrar a una habitación y hacer que algo cambie, aunque no siempre te des cuenta.
-
-En este cumpleaños no te voy a prometer el mundo. Te voy a prometer algo más real: seguir estando. Seguir siendo la persona que más te celebra, no solo hoy sino en todos los martes aburridos y en todos los momentos que no tienen fecha especial.
-
-Espero que este año te traiga todo lo que mereces. Y tú mereces mucho, [NOMBRE] — más de lo que a veces te permites recibir.
+No solo porque estés en mi vida — sino porque eres el tipo de persona que hace que el mundo sea un lugar más interesante para todos los que te conocen.
 
 Feliz cumpleaños. Hoy y todos los días, me alegra que hayas llegado a este mundo.`
+    },
+  };
+
+  // ════════════════════════════════════
+  // MI ESTADO DE LA APLICACIÓN
+  // ════════════════════════════════════
+  let miCategoria = 'romantica';
+  let miEstilo    = 'clasico';
+  let inspiracionVisible = false;
+
+  // ════════════════════════════════════
+  // MIS FUNCIONES PRINCIPALES
+  // ════════════════════════════════════
+
+  // Cambio la categoría al hacer clic en un tab
+  function cambiarCategoria(id, btn) {
+    miCategoria = id;
+
+    // Actualizo tabs visualmente
+    document.querySelectorAll('.tab-btn').forEach(t => {
+      t.classList.remove('activo');
+      t.setAttribute('aria-selected', 'false');
+    });
+    btn.classList.add('activo');
+    btn.setAttribute('aria-selected', 'true');
+
+    const cat = CATEGORIAS[id];
+
+    // Actualizo el panel editor
+    document.getElementById('panel-titulo').textContent  = `Carta ${cat.nombre}`;
+    document.getElementById('tip-texto').textContent     = cat.tip;
+
+    // Actualizo la carta preview
+    document.getElementById('sheet-label').textContent    = cat.label;
+    document.getElementById('sheet-ornamento').textContent = cat.ornamento;
+
+    // Actualizo la inspiración
+    document.getElementById('insp-contenido').textContent = cat.inspiracion;
+
+    // Cierro la inspiración si estaba abierta
+    if (inspiracionVisible) toggleInspiracion();
+
+    actualizarCarta();
+
+    // En móvil, hago scroll al preview
+    if (window.innerWidth < 900) {
+      document.getElementById('panel-preview').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   }
-};
 
-// ─────────────────────────────────────────────────────────────
-// MI ESTADO GLOBAL DEL PERSONALIZADOR
-// ─────────────────────────────────────────────────────────────
-let miCartaActual = 'romantica';
+  // Actualizo el preview de la carta en tiempo real
+  function actualizarCarta() {
+    const nombre = document.getElementById('inp-nombre').value.trim();
+    const titulo = document.getElementById('inp-titulo').value.trim();
+    const cuerpo = document.getElementById('inp-cuerpo').value;
+    const firma  = document.getElementById('inp-firma').value.trim();
 
-// ─────────────────────────────────────────────────────────────
-// MIS FUNCIONES PRINCIPALES
-// ─────────────────────────────────────────────────────────────
+    // Actualizo título
+    const sheetTitulo = document.getElementById('sheet-titulo');
+    sheetTitulo.textContent = titulo || '';
 
-/**
- * Cambio la carta activa al hacer clic en un tab.
- * Actualizo el estado, los tabs visuales y llamo al render.
- */
-function cambiarCarta(id, tabBtn) {
-  miCartaActual = id;
+    // Actualizo cuerpo — resalto el nombre si fue escrito
+    const sheetCuerpo = document.getElementById('sheet-cuerpo');
+    if (cuerpo) {
+      if (nombre) {
+        // Escapo caracteres especiales del nombre para la expresión regular
+        const nombreEsc = nombre.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const html = escapeHtml(cuerpo).replace(
+          new RegExp(nombreEsc, 'g'),
+          `<span class="nombre-highlight">${escapeHtml(nombre)}</span>`
+        );
+        sheetCuerpo.innerHTML = html.replace(/\n/g, '<br>');
+      } else {
+        sheetCuerpo.innerHTML = escapeHtml(cuerpo).replace(/\n/g, '<br>');
+      }
+    } else {
+      sheetCuerpo.innerHTML = '';
+    }
 
-  // Actualizo el estado visual de los tabs
-  document.querySelectorAll('.carta-tab').forEach(t => {
-    t.classList.remove('activo');
-    t.setAttribute('aria-selected', 'false');
+    // Actualizo firma
+    const sheetFirma = document.getElementById('sheet-firma');
+    sheetFirma.textContent = firma || '';
+  }
+
+  // Cuento caracteres del textarea
+  function contarChars() {
+    const len = document.getElementById('inp-cuerpo').value.length;
+    document.getElementById('char-count').textContent = `${len.toLocaleString()} caracteres`;
+  }
+
+  // Cambio el estilo visual de la carta
+  function cambiarEstilo(estilo, btn) {
+    miEstilo = estilo;
+    document.querySelectorAll('.deco-btn').forEach(b => b.classList.remove('activo'));
+    btn.classList.add('activo');
+
+    const sheet = document.getElementById('carta-sheet');
+    sheet.className = `carta-sheet estilo-${estilo}`;
+  }
+
+  // ════════════════════════════════════
+  // MIS FUNCIONES DE ACCIÓN
+  // ════════════════════════════════════
+
+  // Copio el texto plano al portapapeles
+  async function copiarCarta() {
+    const nombre = document.getElementById('inp-nombre').value.trim();
+    const titulo = document.getElementById('inp-titulo').value.trim();
+    const cuerpo = document.getElementById('inp-cuerpo').value.trim();
+    const firma  = document.getElementById('inp-firma').value.trim();
+
+    if (!cuerpo) {
+      mostrarToast('✍️ Primero escribe tu carta', 'error');
+      return;
+    }
+
+    let texto = '';
+    if (nombre) texto += `${nombre},\n\n`;
+    if (titulo) texto += `${titulo}\n\n`;
+    texto += cuerpo;
+    if (firma)  texto += `\n\n${firma}`;
+
+    try {
+      await navigator.clipboard.writeText(texto);
+      mostrarToast('✅ ¡Carta copiada! Lista para pegar', 'exito');
+      const btn = document.getElementById('btn-copiar');
+      const orig = btn.innerHTML;
+      btn.innerHTML = '✓ ¡Copiada!';
+      setTimeout(() => { btn.innerHTML = orig; }, 2000);
+    } catch {
+      mostrarToast('⚠️ Selecciona el texto manualmente', 'error');
+    }
+  }
+
+  // Descargo la carta como imagen PNG usando html2canvas
+  async function descargarImagen() {
+    const cuerpo = document.getElementById('inp-cuerpo').value.trim();
+    if (!cuerpo) {
+      mostrarToast('✍️ Primero escribe tu carta', 'error');
+      return;
+    }
+
+    const btn = document.getElementById('btn-imagen');
+    const orig = btn.innerHTML;
+    btn.innerHTML = '<div class="spinner"></div> Generando...';
+    btn.disabled = true;
+
+    try {
+      const elemento = document.getElementById('carta-capture');
+      const canvas   = await html2canvas(elemento, {
+        scale:           2,        // Alta resolución
+        backgroundColor: '#FFFDF8',
+        useCORS:         true,
+        letterRendering: true,
+        logging:         false,
+      });
+
+      // Descargo la imagen
+      const link    = document.createElement('a');
+      link.download = `carta-amor-${miCategoria}-elmundomanu.png`;
+      link.href     = canvas.toDataURL('image/png');
+      link.click();
+
+      mostrarToast('🎨 ¡Imagen descargada!', 'exito');
+    } catch (error) {
+      console.error('Error generando imagen:', error);
+      mostrarToast('⚠️ Error al generar. Intenta de nuevo.', 'error');
+    } finally {
+      btn.innerHTML = orig;
+      btn.disabled  = false;
+    }
+  }
+
+  // Muestro/oculto el grid de compartir en redes
+  function toggleShareGrid() {
+    const grid = document.getElementById('share-grid');
+    grid.classList.toggle('visible');
+  }
+
+  // Mis funciones de compartir en redes
+  function obtenerTextoParaCompartir() {
+    const cuerpo = document.getElementById('inp-cuerpo').value.trim();
+    const firma  = document.getElementById('inp-firma').value.trim();
+    if (!cuerpo) return null;
+    return `${cuerpo}${firma ? '\n\n' + firma : ''}`;
+  }
+
+  function compartirWhatsApp() {
+    const texto = obtenerTextoParaCompartir();
+    if (!texto) { mostrarToast('✍️ Primero escribe tu carta', 'error'); return; }
+    window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`, '_blank', 'noopener');
+  }
+
+  function compartirTelegram() {
+    const texto = obtenerTextoParaCompartir();
+    if (!texto) { mostrarToast('✍️ Primero escribe tu carta', 'error'); return; }
+    window.open(`https://t.me/share/url?text=${encodeURIComponent(texto)}`, '_blank', 'noopener');
+  }
+
+  function compartirEmail() {
+    const titulo = document.getElementById('inp-titulo').value.trim() || 'Una carta para ti';
+    const texto  = obtenerTextoParaCompartir();
+    if (!texto) { mostrarToast('✍️ Primero escribe tu carta', 'error'); return; }
+    window.location.href = `mailto:?subject=${encodeURIComponent(titulo)}&body=${encodeURIComponent(texto)}`;
+  }
+
+  async function compartirNativo() {
+    const texto = obtenerTextoParaCompartir();
+    if (!texto) { mostrarToast('✍️ Primero escribe tu carta', 'error'); return; }
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'Mi carta de amor — El Mundo de Manu',
+          text:  texto,
+        });
+      } catch (e) { /* El usuario canceló — no hago nada */ }
+    } else {
+      copiarCarta(); // Fallback: copio al portapapeles
+    }
+  }
+
+  // Muestro/oculto la carta de inspiración
+  function toggleInspiracion() {
+    inspiracionVisible = !inspiracionVisible;
+    const texto = document.getElementById('inspiracion-texto');
+    const btn   = document.getElementById('btn-toggle-insp');
+    texto.classList.toggle('visible', inspiracionVisible);
+    btn.textContent = inspiracionVisible ? 'Ocultar' : 'Ver';
+  }
+
+  // Uso la carta de inspiración como base (la pego en el editor)
+  function usarInspiracion() {
+    const cat    = CATEGORIAS[miCategoria];
+    const cuerpo = document.getElementById('inp-cuerpo');
+    cuerpo.value = cat.inspiracion;
+    contarChars();
+    actualizarCarta();
+    toggleInspiracion(); // Cierro la inspiración
+
+    // En móvil hago scroll al campo
+    cuerpo.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    cuerpo.focus();
+
+    mostrarToast('✅ Inspiración aplicada — ¡ahora personalízala!', 'exito');
+  }
+
+  // ════════════════════════════════════
+  // MIS UTILIDADES
+  // ════════════════════════════════════
+
+  // Escapo HTML para mostrar texto seguro en el preview
+  function escapeHtml(texto) {
+    return texto
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  // Mi sistema de toasts
+  function mostrarToast(mensaje, tipo) {
+    const toast  = document.getElementById('toast');
+    toast.textContent = mensaje;
+    toast.className   = `toast show ${tipo || ''}`;
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => { toast.className = 'toast'; }, 3500);
+  }
+
+  // ════════════════════════════════════
+  // EDICIÓN DIRECTA EN LA CARTA PREVIEW
+  // El usuario también puede escribir directo en la hoja
+  // ════════════════════════════════════
+  document.getElementById('sheet-cuerpo').addEventListener('input', function() {
+    // Si el usuario escribe directo en la carta, sincronizo con el textarea
+    const textoPlano = this.innerText;
+    document.getElementById('inp-cuerpo').value = textoPlano;
+    contarChars();
   });
-  tabBtn.classList.add('activo');
-  tabBtn.setAttribute('aria-selected', 'true');
 
-  // Actualizo el header del panel
-  const carta = CARTAS[id];
-  document.getElementById('panel-titulo').textContent = `Carta ${carta.nombre}`;
-  document.getElementById('tip-carta').textContent     = carta.tip;
+  // ════════════════════════════════════
+  // INICIO LA APP
+  // ════════════════════════════════════
+  document.addEventListener('DOMContentLoaded', function() {
+    // Inicializo la inspiración con la carta romántica
+    document.getElementById('insp-contenido').textContent = CATEGORIAS.romantica.inspiracion;
 
-  // Renderizo el preview con los valores actuales del form
-  actualizarPreview();
+    // Verifico si viene con parámetro de categoría en la URL
+    const params = new URLSearchParams(window.location.search);
+    const cat    = params.get('carta');
+    if (cat && CATEGORIAS[cat]) {
+      const tab = document.querySelector(`[data-cat="${cat}"]`);
+      if (tab) cambiarCategoria(cat, tab);
+    }
+  });
+  </script>
 
-  // Scroll suave al top del preview en móvil
-  if (window.innerWidth < 900) {
-    document.querySelector('.pers-preview').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-}
-
-/**
- * Actualizo el preview en tiempo real cuando el usuario escribe.
- * Esta función la ejecuto en cada keypress de los inputs.
- */
-function actualizarPreview() {
-  const carta   = CARTAS[miCartaActual];
-  const nombre  = document.getElementById('input-nombre').value.trim();
-  const firma   = document.getElementById('input-firma').value.trim();
-  const extra   = document.getElementById('input-extra').value.trim();
-
-  // Actualizo el contador de caracteres del textarea
-  document.getElementById('char-count').textContent = extra.length;
-
-  // Mi texto del nombre: uso el real o el placeholder resaltado
-  const nombreMostrar = nombre || '[Nombre]';
-
-  // Reemplazo [NOMBRE] en el cuerpo y resalto el nombre en la vista previa
-  const cuerpoConNombre = carta.cuerpo.replace(/\[NOMBRE\]/g, nombreMostrar);
-
-  // Resalto el nombre para diferenciarlo visualmente (solo si el usuario escribió algo)
-  const cuerpoHTML = nombre
-    ? cuerpoConNombre.replace(
-        new RegExp(nombre.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'),
-        `<span class="highlight-nombre">${nombre}</span>`
-      )
-    : cuerpoConNombre.replace('[Nombre]', '<span style="color:var(--c-gold);opacity:0.5;">[Nombre]</span>');
-
-  // Actualizo los elementos del DOM
-  document.getElementById('sheet-categoria').textContent = carta.categoria;
-  document.getElementById('sheet-titulo').textContent    = carta.titulo;
-  document.getElementById('sheet-body').innerHTML        = cuerpoHTML;
-  document.getElementById('sheet-firma').textContent     = firma || carta.firma_defecto;
-
-  // Muestro u oculto el bloque de detalle personal
-  const extraContainer = document.getElementById('sheet-extra-container');
-  const extraEl        = document.getElementById('sheet-extra');
-  if (extra) {
-    extraEl.textContent        = `"${extra}"`;
-    extraContainer.style.display = 'block';
-  } else {
-    extraContainer.style.display = 'none';
-  }
-}
-
-/**
- * Copio el texto de la carta al portapapeles.
- * Genero texto plano (sin HTML) para pegar en WhatsApp o correo.
- */
-async function copiarCarta() {
-  const carta  = CARTAS[miCartaActual];
-  const nombre = document.getElementById('input-nombre').value.trim() || '[Nombre]';
-  const firma  = document.getElementById('input-firma').value.trim() || carta.firma_defecto;
-  const extra  = document.getElementById('input-extra').value.trim();
-
-  let textoFinal = carta.cuerpo.replace(/\[NOMBRE\]/g, nombre);
-  if (extra) textoFinal += `\n\n"${extra}"`;
-  textoFinal += `\n\n${firma}`;
-
-  try {
-    await navigator.clipboard.writeText(textoFinal);
-    mostrarToast('✅ ¡Carta copiada! Pégala donde quieras.', 'success');
-    // Feedback visual en el botón
-    const btn = document.getElementById('btn-copiar');
-    const textoOriginal = btn.innerHTML;
-    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> ¡Copiado!';
-    setTimeout(() => { btn.innerHTML = textoOriginal; }, 2000);
-  } catch {
-    mostrarToast('⚠️ No se pudo copiar. Selecciona el texto manualmente.', 'error');
-  }
-}
-
-/**
- * Comparto directo por WhatsApp.
- * Abro un link de wa.me con el texto de la carta pre-llenado.
- */
-function compartirWA() {
-  const carta  = CARTAS[miCartaActual];
-  const nombre = document.getElementById('input-nombre').value.trim() || '[Nombre]';
-  const firma  = document.getElementById('input-firma').value.trim() || carta.firma_defecto;
-  const extra  = document.getElementById('input-extra').value.trim();
-
-  let texto = carta.cuerpo.replace(/\[NOMBRE\]/g, nombre);
-  if (extra) texto += `\n\n"${extra}"`;
-  texto += `\n\n${firma}`;
-
-  const url = `https://wa.me/?text=${encodeURIComponent(texto)}`;
-  window.open(url, '_blank', 'noopener,noreferrer');
-}
-
-/**
- * Descargo un PDF simple de la carta.
- * Uso la API nativa window.print() con una hoja de estilo específica para impresión.
- * En el futuro puedo integrar jsPDF para un PDF más elaborado.
- */
-function descargarPDF() {
-  mostrarToast('🎨 Preparando tu PDF...', 'info');
-  setTimeout(() => {
-    window.print();
-  }, 500);
-}
-
-// ─────────────────────────────────────────────────────────────
-// MI SISTEMA DE TOASTS
-// ─────────────────────────────────────────────────────────────
-function mostrarToast(mensaje, tipo) {
-  const toast = document.getElementById('toast');
-  toast.textContent = mensaje;
-  toast.className   = `toast show ${tipo || ''}`;
-  clearTimeout(toast._timer);
-  toast._timer = setTimeout(() => { toast.className = 'toast'; }, 3500);
-}
-
-// ─────────────────────────────────────────────────────────────
-// INICIO LA APLICACIÓN
-// ─────────────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', function() {
-  // Render inicial con la carta romántica
-  actualizarPreview();
-
-  // Si viene un parámetro ?carta=X en la URL, la selecciono automáticamente
-  const params  = new URLSearchParams(window.location.search);
-  const cartaId = params.get('carta');
-  if (cartaId && CARTAS[cartaId]) {
-    const tab = document.querySelector(`[data-carta="${cartaId}"]`);
-    if (tab) cambiarCarta(cartaId, tab);
-  }
-});
-</script>
-
-<!-- Mi hoja de estilos de impresión — aplicada solo al imprimir -->
-<style>
-@media print {
-  .pers-header, .pers-panel, .pers-actions, .toast { display: none !important; }
-  .pers-body    { grid-template-columns: 1fr !important; height: auto !important; }
-  .pers-preview { padding: 0 !important; background: white !important; }
-  .carta-sheet  {
-    box-shadow: none !important; border-radius: 0 !important;
-    max-width: 100% !important; background: white !important;
-    color: black !important;
-  }
-  .carta-sheet-body, .carta-sheet-titulo, .carta-sheet-firma { color: black !important; }
-  .highlight-nombre { color: #8B6914 !important; }
-}
-</style>
 </body>
 </html>
