@@ -157,6 +157,12 @@ async function pagarConMercadoPago({ email, nombre }) {
 
   const datos = await respuesta.json();
   if (!datos.ok) throw new Error(datos.mensaje);
+
+  // Guardo el email en sessionStorage para recuperar el token en success.html
+  // MP redirige fuera del sitio, así que sessionStorage sobrevive al regreso
+  sessionStorage.setItem('pago_email', email);
+  sessionStorage.setItem('pago_nombre', nombre || '');
+
   window.location.href = datos.init_point;
 }
 
@@ -200,6 +206,10 @@ async function pagarConWompi({ email, nombre }) {
     input.type = 'hidden'; input.name = n; input.value = v;
     formulario.appendChild(input);
   });
+
+  // Guardo el email antes de salir del sitio
+  sessionStorage.setItem('pago_email', email);
+  sessionStorage.setItem('pago_nombre', nombre || '');
 
   document.body.appendChild(formulario);
   formulario.submit();
@@ -246,6 +256,10 @@ async function pagarConBold({ email, nombre }) {
     window.addEventListener('boldCheckoutLoaded',     resolve, { once: true });
     window.addEventListener('boldCheckoutLoadFailed', () => reject(new Error('Error cargando Bold')), { once: true });
   });
+
+  // Guardo el email antes de que Bold redirija
+  sessionStorage.setItem('pago_email', email);
+  sessionStorage.setItem('pago_nombre', nombre || '');
 
   // Paso 3 — Creo instancia BoldCheckout y abro el modal
   // Método oficial según documentación de integración personalizada de Bold
