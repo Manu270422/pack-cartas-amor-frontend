@@ -532,7 +532,18 @@
     // ── Intento recuperar el token para actualizar el botón ──
     // Prioridad: 1) sessionStorage (si ya lo tenía), 2) backend por email
     const tokenGuardado = sessionStorage.getItem('acceso_token');
-    const emailGuardado = sessionStorage.getItem('pago_email');
+    // Busco el email en URL primero (Bold lo manda ahi), luego sessionStorage (MP/Wompi)
+    const emailUrl      = params.get('pago_email');
+    const nombreUrl2    = params.get('pago_nombre');
+    const emailGuardado = emailUrl
+                        ? decodeURIComponent(emailUrl)
+                        : sessionStorage.getItem('pago_email');
+
+    // Si vino en URL, actualizo sessionStorage para la ruta de recuperacion
+    if (emailUrl) {
+      sessionStorage.setItem('pago_email', decodeURIComponent(emailUrl));
+      sessionStorage.setItem('pago_nombre', decodeURIComponent(nombreUrl2 || ''));
+    }
     const btnAcceso     = document.getElementById('btn-acceso');
     const MI_BACKEND    = 'https://pack-cartas-amor.onrender.com';
 
