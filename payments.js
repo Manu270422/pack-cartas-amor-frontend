@@ -331,3 +331,4 @@ function mostrarToast(msg, tipo) {
   t._t = setTimeout(() => { t.className = 'toast'; }, 4500);
 }
 window.mostrarNotificacion = mostrarToast;
+
