@@ -522,7 +522,7 @@
   (async function verificarAcceso() {
     const MI_BACKEND_URL = (() => {
       const esLocal = ['localhost','127.0.0.1',''].includes(window.location.hostname);
-      return esLocal ? 'http://localhost:3000' : 'https://pack-cartas-amor.onrender.com';
+      return esLocal ? 'http://localhost:3000' : 'https://pack-cartas-amor-backend-production.up.railway.app';
     })();
 
     const params = new URLSearchParams(window.location.search);
